@@ -1,0 +1,14 @@
+add_library(isplib SHARED ISPLib.cpp)
+
+if(WIN32)
+    set_target_properties(isplib PROPERTIES SUFFIX ".dll")
+elseif(UNIX)
+    set_target_properties(isplib PROPERTIES SUFFIX ".so")
+endif()
+
+install (TARGETS isplib
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
+install (FILES ISPLib.h DESTINATION "include")

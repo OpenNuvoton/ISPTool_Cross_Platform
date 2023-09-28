@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>320px-Nuvoton.png</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file alias="app.ico">NuTool.ico</file>
+    </qresource>
+</RCC>
