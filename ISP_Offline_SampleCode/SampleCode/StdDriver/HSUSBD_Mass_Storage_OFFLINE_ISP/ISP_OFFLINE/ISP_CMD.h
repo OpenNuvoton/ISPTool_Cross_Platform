@@ -36,7 +36,7 @@ struct sISP_COMMAND
     void (*ISPCmdRunLDROM)(void);
     void (*ISPCmdRunAPROM)(void);
     ErrNo(*ISPUpdateFlash)(uint32_t in_startaddr, uint32_t in_file_totallen);
-		void (*ISPOpen)(void);
+    void (*ISPOpen)(void);
 };
 
 

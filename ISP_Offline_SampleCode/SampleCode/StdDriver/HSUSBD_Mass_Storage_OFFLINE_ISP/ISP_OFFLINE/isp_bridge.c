@@ -9,7 +9,6 @@ extern "C"
 {
 #endif
 
-
 static volatile uint8_t g_lib_CmdFromTool = 0ul;
 static volatile uint8_t g_lib_CmdToTarget = 0ul;
 static volatile uint8_t g_lib_IspModule = 0ul; // 3: SPI, 4: I2C, 5: RS485, 6: CAN

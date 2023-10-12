@@ -60,7 +60,7 @@ void UART2_IRQHandler(void)
 }
 
 void m_dev_io_init() {
-	/* Enable UART module clock */
+    /* Enable UART module clock */
     CLK->APBCLK0 |= CLK_APBCLK0_UART2CKEN_Msk;
     /* Select UART module clock source */
     CLK->CLKSEL3 = (CLK->CLKSEL3 & (~CLK_CLKSEL3_UART2SEL_Msk)) | CLK_CLKSEL3_UART2SEL_HXT;
@@ -84,7 +84,7 @@ void m_dev_io_init() {
 }
 
 unsigned int m_dev_io_open() {
-	return TRUE;
+    return TRUE;
 }
 
 void m_dev_io_close() {
@@ -93,45 +93,44 @@ void m_dev_io_close() {
 
 unsigned int m_dev_io_read(unsigned int dwMilliseconds, unsigned char* pcBuffer) {
     BUSY = 0;
-		uint8_t i;
+    uint8_t i;
     uint8_t *pRxData;
     unsigned int rxlen = 64;
-		unsigned int readlen = 0;
+    unsigned int readlen = 0;
     pRxData = (uint8_t *)pcBuffer;
 
-		if (AUTO_DETECT_VALUE == 0)
+    if (AUTO_DETECT_VALUE == 0)
     {
         while (bUartDataReady == 0);
     }
     else
     {
-				SysTick->LOAD = 20000 * CyclesPerUs;
-				SysTick->VAL  = 0x0UL;
-				SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
+        SysTick->LOAD = 20000 * CyclesPerUs;
+        SysTick->VAL  = 0x0UL;
+        SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 
-				while (bUartDataReady == 0)
-				{
-						/* Waiting for down-count to zero */
-						if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0UL)
-						{
-								break;
-						}
-				}
-				/* Disable SysTick counter */
-				SysTick->CTRL = 0UL;
-		}
+        while (bUartDataReady == 0)
+        {
+            if ((SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) != 0UL)
+            {
+                break;
+            }
+        }
+        /* Disable SysTick counter */
+        SysTick->CTRL = 0UL;
+    }
     for (i = 0; i < rxlen; i++)
     {
         pRxData[i+1] = uart_rcvbuf[i];
-			  readlen ++;
+        readlen ++;
     }
 
     return (unsigned int) readlen;
 }
 
 unsigned int m_dev_io_write(unsigned int dwMilliseconds, unsigned char* pcBuffer) {
-		BUSY = 1;
-		unsigned long dwLength;
+    BUSY = 1;
+    unsigned long dwLength;
     UART_WriteMultiBytes((uint8_t *)pcBuffer);
     return 1;
 }

@@ -73,27 +73,25 @@ ErrNo CmdGetDeviceID(unsigned int *devid)
 
 ErrNo CmdGetConfig(unsigned int *config)
 {
-		ISP_ReadConfig(&handle_io, config);
+    ISP_ReadConfig(&handle_io, config);
     return 0;
 }
 
 extern volatile unsigned int AUTO_DETECT_VALUE;
 
 void CmdISPOpen(void){
-	  ISP_Open(&handle_io);
+    ISP_Open(&handle_io);
 }
 
 void auto_detect_command(void)
 {
-	
-	int var = 0;
+    int var = 0;
 
-	while(var == 0){
-		 handle_io.m_uCmdIndex = 1;
-		 var = ISP_Connect(&handle_io, 50000);
-	}
-  AUTO_DETECT_VALUE = 0;
-	
+    while(var == 0){
+        handle_io.m_uCmdIndex = 1;
+        var = ISP_Connect(&handle_io, 50000);
+    }
+    AUTO_DETECT_VALUE = 0;
 }
 
 ErrNo UpdatedTargetFalsh(uint32_t in_startaddr, uint32_t in_file_totallen)
@@ -103,33 +101,32 @@ ErrNo UpdatedTargetFalsh(uint32_t in_startaddr, uint32_t in_file_totallen)
     unsigned long AP_file_totallen = in_file_totallen;
     f_open(&file1, (const char *)APROM_NAME, FA_OPEN_EXISTING | FA_READ);
 
-	ISP_SyncPackNo(&handle_io);
+    ISP_SyncPackNo(&handle_io);
 
-	for (unsigned long i = 0; i < AP_file_totallen;) {
+    for (unsigned long i = 0; i < AP_file_totallen;) {
 
-		unsigned long uLen;
-		unsigned int uRetry = 10;
-		f_read(&file1, file_buffer, 48, &s1);
-		while (uRetry) {
-						
-						ISP_UpdateAPROM(&handle_io, in_startaddr, AP_file_totallen, in_startaddr + i, (unsigned char*)file_buffer, (unsigned int*)&uLen);
+        unsigned long uLen;
+        unsigned int uRetry = 10;
+        f_read(&file1, file_buffer, 48, &s1);
+        while (uRetry) {
+            ISP_UpdateAPROM(&handle_io, in_startaddr, AP_file_totallen, in_startaddr + i, (unsigned char*)file_buffer, (unsigned int*)&uLen);
 
-						if (handle_io.bResendFlag) {
-								uRetry--;
-								if (uRetry == 0 || i == 0 || !ISP_Resend(&handle_io)) {
-										BUSY = 0;
-										PASS = 1;
-										return 1;
-								}
-						} else {
-								break;
-						}
-				}
-			i += uLen;
-			printf("Programm: %.0f %%\r", (float)((float)((float)i /(float) AP_file_totallen) * (float)100.0));
-		}
-		
-	f_close(&file1);
+            if (handle_io.bResendFlag) {
+                uRetry--;
+                if (uRetry == 0 || i == 0 || !ISP_Resend(&handle_io)) {
+                    BUSY = 0;
+                    PASS = 1;
+                    return 1;
+                }
+            } else {
+                break;
+            }
+        }
+        i += uLen;
+        printf("Programm: %.0f %%\r", (float)((float)((float)i /(float) AP_file_totallen) * (float)100.0));
+    }
+        
+    f_close(&file1);
     BUSY = 0;
     PASS = 0;
     return ENOERR;
@@ -145,7 +142,7 @@ void init_ISP_command(void)
     ISP_COMMAND.ISPCmdRunAPROM = CmdRunAPROM;
     ISP_COMMAND.ISPauto_detect_command = auto_detect_command;
     ISP_COMMAND.ISPUpdateFlash = UpdatedTargetFalsh;
-		ISP_COMMAND.ISPOpen = CmdISPOpen;
+    ISP_COMMAND.ISPOpen = CmdISPOpen;
 }
 
 void ISPOpen(struct sISP_COMMAND *gISP_COMMAND)
