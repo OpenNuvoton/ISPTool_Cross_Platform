@@ -49,11 +49,6 @@ unsigned int ISP_Read(io_handle_t* handle, unsigned char* pcBuffer, unsigned int
 			return FALSE;
 		}
 		dwLength = handle->m_dev_io.read(dwMilliseconds, handle->ac_buffer);
-		printf("read: \n");
-		for (int i = 0; i < 65; i++) {
-			printf("%x ", *(&(handle->ac_buffer[i])));
-		}
-		printf("\n");
 		if (!dwLength) {
 			return FALSE;
 		}
@@ -98,11 +93,6 @@ unsigned int ISP_Write(io_handle_t* handle, unsigned int uCmd, unsigned char* pc
 		memcpy((unsigned char*)(&(handle->ac_buffer[9])), pcBuffer, dwCmdLength);
 	}
 	handle->m_usCheckSum = Checksum(&(handle->ac_buffer[1]), sizeof(handle->ac_buffer) - 1);
-	printf("write: \n");
-	for (int i = 0; i < 65; i++) {
-		printf("%x ", *(&(handle->ac_buffer[i])));
-	}
-	printf("\n");
 	bRet = handle->m_dev_io.write(dwMilliseconds, handle->ac_buffer);
 	if (bRet != FALSE) {
 		handle->m_uCmdIndex += 2;
@@ -209,9 +199,7 @@ unsigned int ISP_Connect(io_handle_t* handle, unsigned int dwMilliseconds) {
 	unsigned int ret = FALSE;
 	unsigned int uID;
 
-	printf("start write CMD_CONNECT command.\n");
-	if (ISP_Write(handle, CMD_CONNECT, NULL, 0, 20)) {
-		printf("start read CMD_CONNECT command.\n");
+	if (ISP_Write(handle, CMD_CONNECT, NULL, 0, USBCMD_TIMEOUT)) {
 		ret = ISP_Read(handle, (unsigned char*)&uID, 4, dwMilliseconds, FALSE);
 	}
 
@@ -290,4 +278,123 @@ unsigned int ISP_UpdateSPI(io_handle_t* handle, unsigned int start_addr, unsigne
 	}
 
 	return TRUE;
+}
+
+unsigned int ISP_CAN_Write(io_handle_t* handle, unsigned int uCmd, unsigned int uData, unsigned int dwMilliseconds = 20) {
+	unsigned int dwLength = 0;
+	unsigned int bRet = FALSE;
+
+	if (handle->dev_open == FALSE) {
+		return FALSE;
+	}
+
+	memset(handle->ac_buffer, 0, sizeof(handle->ac_buffer));
+	*((unsigned long *)&(handle->ac_buffer[3])) = uCmd;
+	*((unsigned long *)&(handle->ac_buffer[7])) = uData;
+
+	handle->m_uCmdIndex = uCmd;
+
+	bRet = handle->m_dev_io.write(dwMilliseconds, handle->ac_buffer);
+	if (bRet == FALSE) {
+		handle->m_dev_io.close();
+	}
+	return bRet;
+}
+
+unsigned int ISP_CAN_Read(io_handle_t* handle, unsigned int dwMilliseconds = 5000) {
+	unsigned long uCmd = 0;
+	unsigned long uData = 0;
+	unsigned int dwLength = 0;
+	handle->bResendFlag = FALSE;
+
+	if (handle->dev_open == FALSE) {
+		return FALSE;
+	}
+	dwLength = handle->m_dev_io.read(dwMilliseconds, handle->ac_buffer);
+	if (!dwLength) {
+		return FALSE;
+	}
+
+	uCmd = *((unsigned long*)&(handle->ac_buffer[1]));
+	uData = *((unsigned long*)&(handle->ac_buffer[5]));
+
+	if (uCmd != handle->m_uCmdIndex) {
+		return FALSE;
+	}
+	else {
+		return TRUE;
+	}
+}
+
+unsigned int ISP_CAN_GetDeviceID(io_handle_t* handle) {
+	unsigned int UID = 0;
+	ISP_CAN_Write(handle, CAN_CMD_GET_DEVICEID, 0);
+	int ret = ISP_CAN_Read(handle);
+	if (ret) {
+		UID = *((unsigned long*)&(handle->ac_buffer[5]));
+	}
+	return UID;
+}
+
+void ISP_CAN_ReadConfig(io_handle_t* handle, unsigned int config[]) {
+	for (int i = 0; i < 4; i++) {
+		if (ISP_CAN_Write(handle, CAN_CMD_READ_CONFIG, 0x00300000 + 4 * i)) {
+			if (ISP_CAN_Read(handle)) {
+				config[i] = *((unsigned long*)&(handle->ac_buffer[5]));
+			}
+		}
+	}
+}
+
+void ISP_CAN_UpdateConfig(io_handle_t* handle, unsigned int config[], unsigned int response[]) {
+	for (int i = 0; i < 4; i++) {
+		if (ISP_CAN_Write(handle, 0x00300000 + 4 * i, config[i])) {
+			if (ISP_CAN_Read(handle)) {
+				response[i] = *((unsigned long*)&(handle->ac_buffer[5]));
+			}
+		}
+	}
+}
+
+void ISP_CAN_UpdateAPROM(io_handle_t* handle, unsigned int start_addr, unsigned int total_len, unsigned int cur_addr, unsigned char* buffer, unsigned int* update_len) {
+	handle->bResendFlag = TRUE;
+	unsigned int write_len = total_len - (cur_addr - start_addr);
+	unsigned char acBuffer[56];
+
+	if (write_len > 4) {
+		write_len = 4;
+	}
+
+	if (write_len) {
+		unsigned long data = 0;
+		memcpy(&data, buffer, write_len);
+
+		if (ISP_CAN_Write(handle, cur_addr, data)) {
+			if (ISP_CAN_Read(handle)) {
+				handle->bResendFlag = FALSE;
+			}
+		}
+	}
+
+	if (update_len != NULL) {
+		*update_len = write_len;
+	}
+}
+
+void ISP_CAN_UpdateDataFlash(io_handle_t* handle, unsigned int start_addr, unsigned int total_len, unsigned int cur_addr, unsigned char* buffer, unsigned int* update_len) {
+	ISP_CAN_UpdateAPROM(handle, start_addr, total_len, cur_addr, buffer, update_len);
+}
+
+unsigned int ISP_CAN_Connect(io_handle_t* handle, unsigned int dwMilliseconds) {
+	unsigned int ret = FALSE;
+
+	if (ISP_CAN_Write(handle, CAN_CMD_GET_DEVICEID, 0)) {
+		ret = ISP_CAN_Read(handle);
+	}
+
+	return ret;
+}
+
+unsigned int ISP_CAN_RunAPROM(io_handle_t* handle) {
+	return ISP_CAN_Write(handle, CAN_CMD_RUN_APROM, 0);
 }
