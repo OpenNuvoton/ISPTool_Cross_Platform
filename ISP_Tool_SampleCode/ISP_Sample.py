@@ -99,15 +99,13 @@ class USB_dev_io:
             return False
         else: 
             print ('USB get')
-            print (self.dev)
-            print (self.dev.get_manufacturer_string())
-            print (self.dev.get_product_string())
-            print (self.dev.get_serial_number_string())
+            #print (self.dev)
             return True
     
     def USB_close(self):
         try:
-            self.dev.close()
+            if self.dev != None:
+                self.dev.close()
             self.dev = None
             print('USB Close')
             
@@ -123,12 +121,12 @@ class USB_dev_io:
             bytes_data = bytearray(data)
             
             if (self.interface_num != 0):
-                bytes_data[2] = self.interface_num + 1
+                bytes_data[2] = (self.interface_num + 1)
             
-            self.dev.set_nonblocking(1)
+            #self.dev.set_nonblocking(1)
             bytes_written = self.dev.write(bytes_data)
-            print(bytes_written, len(bytes_data))
-            if bytes_written == len(bytes_data):
+            #print(bytes_written, len(bytes_data))
+            if bytes_written >= len(bytes_data):
                 return 1
             else:
                 return 0
@@ -148,9 +146,7 @@ class USB_dev_io:
             buffer_as_bytes = (c_ubyte * (len(return_str)+1))()
             buffer_as_bytes[1:] = return_str
             memmove(buffer, buffer_as_bytes, len(buffer_as_bytes))
-            
-            print(bytearray(buffer_as_bytes))
-            #print(len(buffer_as_bytes))
+
             return len(buffer_as_bytes) - 1
             
         except Exception as e:
@@ -175,7 +171,7 @@ class UART_dev_io:
     
     def UART_open(self):
         try:                
-            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 2.5) 
+            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 3) 
             
             if(self.dev.isOpen() == False):
                 self.dev.open()
@@ -206,7 +202,7 @@ class UART_dev_io:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
             bytes_data = bytearray(data[1:])
             test = self.dev.write(bytes_data)
-
+            #print(bytes_data, len(bytes_data))
             if test == len(bytes_data):
                 return 1
             else:
@@ -227,7 +223,11 @@ class UART_dev_io:
                 buffer_as_bytes[1:] = return_str
             
             memmove(buffer, buffer_as_bytes, len(buffer_as_bytes))  
-            return len(return_str) 
+            #print(return_str, len(return_str))
+            if len(return_str) >= 4:
+                return len(return_str)
+            else:
+                return 0
         
         except Exception as e:
             print(f"Exception occurred: {e}")
@@ -247,6 +247,8 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         self.progressBar.setValue(0)
         
         self.connect_flag = False
+        self.isCAN = False
+        self.isUART = False
         
         self.btn_APROM.clicked.connect(self.iniBrowseAPROM)
         self.btn_DataFlash.clicked.connect(self.iniBrowseDataFlash)
@@ -263,7 +265,6 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         #USB Version
         self.USB_dev_io = USB_dev_io()
         self.UART_dev_io = UART_dev_io()
-        self.DEV_IO_setting(self.comboBox_interface.currentIndex())
         
         if os.name == 'nt':  # Windows
             self.lib = ctypes.cdll.LoadLibrary('./ISPLib.dll')
@@ -281,10 +282,14 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         self.m_ulDeviceID = 0x0
         self.chip_type = 0x0
         self.memory_size = 0
+        self.aprom_size = 0
+        self.nvm_size = 0
         self.page_size = 0
         
         self.label_DeviceID.setText("Device ID:" + "0xFFFFFFFF")
         self.label_Size.setText("")
+        self.label_DeviceID_2.setText("")
+        self.label_Size_2.setText("")
         
         self.btn_Connect.clicked.connect(self.Ui_open)
         self.btn_Write.clicked.connect(self.Ui_write)
@@ -303,8 +308,8 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             self.comboBox_port.setEnabled(False)
         
-    def DEV_IO_setting(self, num):
-        if (num!= 1):
+    def DEV_IO_setting(self):
+        if (not self.isUART):
             self.DEV_IO.init = VOIDFUNCTYPE(self.USB_dev_io.USB_init)
             self.DEV_IO.open = UINTFUNCTYPE(self.USB_dev_io.USB_open)
             self.DEV_IO.close = VOIDFUNCTYPE(self.USB_dev_io.USB_close)
@@ -320,33 +325,70 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         self.io_handle_t.m_dev_io = self.DEV_IO
         
     def Ui_open(self):
-        if self.comboBox_interface.currentIndex()!= 1:
-            self.USB_dev_io.interface_num = self.comboBox_interface.currentIndex()
+        prev = self.connect_flag
+        self.isUART = True if (self.comboBox_interface.currentIndex()== 1) else False
+        if not self.isUART:
+            self.USB_dev_io.interface_num = self.comboBox_interface.currentIndex()            
+            self.isCAN = True if (self.comboBox_interface.currentIndex()== 5) else False
         else:
             self.UART_dev_io.COM_PORT = str(self.comboBox_port.currentText())
             
-        self.DEV_IO_setting(self.comboBox_interface.currentIndex())
+        self.DEV_IO_setting()
         
         self.lib.ISP_Open.argtypes = [POINTER(io_handle_t)]
         self.lib.ISP_Open.restype = c_uint
         self.lib.ISP_Close.argtypes = [POINTER(io_handle_t)]
         self.lib.ISP_Close.restype = None
         
+        ct = False
+        
+        print("UI Open " + str(self.connect_flag) + " " + str(self.io_handle_t.dev_open))
         if (self.connect_flag == False):
-            self.connect_flag = False if (self.lib.ISP_Open(byref(self.io_handle_t))== 0) else True;
+            ct = self.lib.ISP_Open(byref(self.io_handle_t))
+            self.connect_flag = False if (ct == 0) else True;
+            if (self.connect_flag == False):
+                reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Connect Fail')
         else:
             self.connect_flag = False
-            self.lib.ISP_Close(byref(self.io_handle_t))
             self.label_DeviceID.setText("Device ID:" + "0xFFFFFFFF")
             self.label_Size.setText("")
+            self.label_DeviceID_2.setText("")
+            self.label_Size_2.setText("")
             
-        if (self.connect_flag == False):
-            print("false \n")
+        if (self.connect_flag == False):   
+            self.lib.ISP_Close(byref(self.io_handle_t))
             self.label_Connection.setText("Status: Disconnected")
             self.comboBox_interface.setEnabled(True)
             self.btn_Connect.setText("Connect")
-        elif (self.lib.ISP_Connect(byref(self.io_handle_t), 2500)):  # 2.5 sec
-            print("connect \n")
+        elif (self.isCAN):
+            if (self.lib.ISP_CAN_Connect(byref(self.io_handle_t), 2500)):
+                print("connect \n")
+                self.m_ulDeviceID = self.lib.ISP_CAN_GetDeviceID(byref(self.io_handle_t));
+                print("get id \n")
+                self.lib.ISP_CAN_ReadConfig(byref(self.io_handle_t), byref(self.config));
+                print("get config \n")
+                
+                try:
+                    self.update_flash()
+                except Exception as e:
+                    print("no connect \n")
+                    self.lib.ISP_Close(byref(self.io_handle_t))
+                    reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Connect Fail')
+                    self.connect_flag = False
+                    return
+                    
+                self.label_Connection.setText("Status: Connected")
+                self.btn_Connect.setText("Disconnect")
+                self.comboBox_interface.setEnabled(False)
+            else:
+                ct = False
+
+        else:
+            t = 0
+            while (not self.lib.ISP_Connect(byref(self.io_handle_t), 50000) and t < 1):
+                t = t + 1
+                print("try connect \n")
+                
             self.lib.ISP_SyncPackNo(byref(self.io_handle_t));
             print("sync \n")
             self.m_ucFW_VER = self.lib.ISP_GetVersion(byref(self.io_handle_t));
@@ -355,22 +397,33 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             print("get id \n")
             self.lib.ISP_ReadConfig(byref(self.io_handle_t), byref(self.config));
             print("get config \n")
-            self.update_flash()
-            self.label_Connection.setText("Status: Connected")
-            self.btn_Connect.setText("Disconnect")
-            self.comboBox_interface.setEnabled(False)
-        else:
+            
+            try:
+                self.update_flash()
+                self.label_Connection.setText("Status: Connected")
+                self.btn_Connect.setText("Disconnect")
+                self.comboBox_interface.setEnabled(False)
+            except Exception as e:
+                ct = False
+                            
+            
+        if (not ct and not prev):
             print("no connect \n")
+            self.lib.ISP_Close(byref(self.io_handle_t))
+            reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Connect Fail')
             self.connect_flag = False
                  
     def update_flash(self):
         chip_name, chip_type, aprom_size, nvm_size, nvm_addr, page_size = GetStaticInfo(self, self.m_ulDeviceID, self.config)
-        self.label_DeviceID.setText("Device ID:" + hex(self.m_ulDeviceID) + "       Device Name:" + chip_name)
-        text = "APROM Size: "+ str(int(aprom_size/1024)) +"KB       Data Flash Size:   "+ str(int(nvm_size/1024))+"KB"
+        self.label_DeviceID.setText("Device ID: " + hex(self.m_ulDeviceID))
+        self.label_DeviceID_2.setText("Device Name: " + chip_name)
         self.chip_type = chip_type
         self.memory_size = aprom_size + nvm_size
         self.page_size = page_size
-        self.label_Size.setText(text)
+        self.label_Size.setText("APROM Size: "+ str(int(aprom_size/1024)) + "KB")
+        self.label_Size_2.setText("Data Flash Size: "+ str(int(nvm_size/1024)) + "KB")
+        self.aprom_size = aprom_size
+        self.nvm_size = nvm_size
     
     def Ui_write(self):
         if (self.connect_flag == True):
@@ -380,6 +433,10 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.APROM_file = []
                 self.read_APROM()
                 lenAPROM =len(self.APROM_file)
+                print(lenAPROM, self.aprom_size)
+                if (lenAPROM > self.aprom_size):
+                    reply = QtWidgets.QMessageBox.warning(None, 'message box', 'APROM size over')
+                    return
                 self.lib.ISP_SyncPackNo(byref(self.io_handle_t))
                 i = 0
                 start_addr = 0
@@ -391,7 +448,11 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 while (i < self.APROM_size):
                     update_len = c_uint(0)
                     buffer = ctypes.cast(ctypes.addressof(array_pointer.contents) + i, POINTER(c_ubyte))
-                    self.lib.ISP_UpdateAPROM(byref(self.io_handle_t), start_addr, self.APROM_size, start_addr + i, buffer, byref(update_len))
+                    if (not self.isCAN):
+                        self.lib.ISP_UpdateAPROM(byref(self.io_handle_t), start_addr, self.APROM_size, start_addr + i, buffer, byref(update_len))
+                    else:
+                        self.lib.ISP_CAN_UpdateAPROM(byref(self.io_handle_t), start_addr, self.APROM_size, start_addr + i, buffer, byref(update_len))
+                        
                     if (self.io_handle_t.bResendFlag == True):
                         retry_coda =  retry_coda - 1
                         if (retry_coda == 0): 
@@ -404,19 +465,22 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                     print(i, lenAPROM)
                     # percent = i / len(self.APROM_file)
                     self.progressBar.setValue( int(i * 100 / lenAPROM) )
-                    
+                
                 f_second = time.time()
                 print("Update APROM finish: " + str(f_second - b_second) + " second cost.")
+                reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Update APROM finish')
                 
             elif self.radioButton_DataFlash.isChecked():               
                 self.lib.ISP_ReadConfig(byref(self.io_handle_t), byref(self.config)); 
                 self.DataFlash_file = []
                 self.read_DataFlash()
                 lenDataFlash =len(self.DataFlash_file)
+                if (lenDataFlash > self.nvm_size):
+                    reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Data flash size over')
+                    return
                 self.lib.ISP_SyncPackNo(byref(self.io_handle_t))
                 i = 0
                 start_addr = self.config[1] & 0x00FFFFFF
-                
                 update_len = c_uint()
                 retry_coda = 10
                 self.DataFlash_file_ctypes = (ctypes.c_ubyte * lenDataFlash)(*self.DataFlash_file)
@@ -424,7 +488,10 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 while (i < self.DataFlash_size):
                     update_len = c_uint(0)
                     buffer = ctypes.cast(ctypes.addressof(array_pointer.contents) + i, POINTER(c_ubyte))
-                    self.lib.ISP_UpdateDataFlash(byref(self.io_handle_t), start_addr, self.DataFlash_size, start_addr + i, buffer, byref(update_len))
+                    if (not self.isCAN):
+                        self.lib.ISP_UpdateDataFlash(byref(self.io_handle_t), start_addr, self.DataFlash_size, start_addr + i, buffer, byref(update_len))
+                    else:
+                        self.lib.ISP_CAN_UpdateDataFlash(byref(self.io_handle_t), start_addr, self.DataFlash_size, start_addr + i, buffer, byref(update_len))
                     if (self.io_handle_t.bResendFlag == True):
                         retry_coda =  retry_coda - 1
                         if (retry_coda == 0): 
@@ -434,10 +501,15 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                     i = i + update_len.value
                     # percent = i / lenDataFlash
                     self.progressBar.setValue( int(i * 100 / lenDataFlash) )
+                reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Update Data Flash finish')
                 
             elif self.radioButton_Config.isChecked():
-                self.lib.ISP_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config)
-                self.lib.ISP_ReadConfig(pointer(self.io_handle_t), self.config)
+                if (not self.isCAN):
+                    self.lib.ISP_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config)
+                    self.lib.ISP_ReadConfig(pointer(self.io_handle_t), self.config)
+                else:
+                    self.lib.ISP_CAN_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config)
+                    self.lib.ISP_CAN_ReadConfig(pointer(self.io_handle_t), self.config)
         
         self.update_flash()
             
@@ -445,8 +517,9 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         if (self.connect_flag == True):
             self.lib.ISP_EraseAll(pointer(self.io_handle_t))
             self.lib.ISP_ReadConfig(pointer(self.io_handle_t), self.config)
-        
+            
         self.update_flash()
+        reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Erase All finish')
         
     def iniBrowseAPROM(self):
         filename = ""

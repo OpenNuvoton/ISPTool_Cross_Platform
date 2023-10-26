@@ -1,13 +1,26 @@
 import ctypes
 from ctypes import *
 
+(
+    ECE_NO_ERROR,
+    ECE_NO_CHIP_CFG_DATA,
+    ECE_NO_MATCH_CHIP,
+    ECE_NO_MATCH_SERIES,
+    ECE_EXPORT_FAILED,
+    ECE_CFG_NO_CFG,
+    ECE_CFG_DATAFLASH_ADDRESS_ERROR,
+    ECE_USE_DEFAULT_CHIP,
+    ECE_XLSLIB_NOT_EXIST,
+    ECE_FILE_NOT_EXIST
+) = map(ctypes.c_int, range(10))
+
 class I_ChipInfoManager(Structure):
     _fields_ = [
-        ("ReleaseDLL", ReleaseDLL),
-        ("GetChipInfo", GetChipInfo),
-        ("GetChipInfoByFindInfo", GetChipInfoByFindInfo),
-        ("ExportChipInfo", ExportChipInfo),
-        ("CheckChipFromXLS", CheckChipFromXLS),
+        ("ReleaseDLL", CFUNCTYPE(c_void_p)),
+        ("GetChipInfo", CFUNCTYPE(c_uint)),
+        ("GetChipInfoByFindInfo", CFUNCTYPE(c_uint)),
+        ("ExportChipInfo", CFUNCTYPE(c_uint)),
+        ("CheckChipFromXLS", CFUNCTYPE(c_uint)),
     ] 
                 
 CHIP_UCID_MAX_LEN = 4  
@@ -59,10 +72,3 @@ def get_NuVoice_info(dwChipID, pConfig):
         windll.kernel32.FreeLibrary(hDll)
     
     return ret
-
-
-
-
-
-
- 
