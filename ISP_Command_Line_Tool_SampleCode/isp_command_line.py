@@ -90,7 +90,6 @@ class USB_dev_io:
             return False
         else: 
             print ('USB get')
-            #print (self.dev)
             return True
     
     def USB_close(self):
@@ -108,7 +107,6 @@ class USB_dev_io:
     def USB_write(self, Ctime, buffer):
         try:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
-            #bytes_data = bytearray(data[1:])
             bytes_data = bytearray(data)
             
             if (self.interface_num != 0):
@@ -116,7 +114,6 @@ class USB_dev_io:
             
             #self.dev.set_nonblocking(1)
             bytes_written = self.dev.write(bytes_data)
-            #print(bytes_data, bytes_written, len(bytes_data))
             if bytes_written >= len(bytes_data):
                 return 1
             else:
@@ -127,7 +124,6 @@ class USB_dev_io:
             import traceback
             traceback.print_exc()
             return 0
-        #"""
         
     def USB_read(self, Ctime, buffer):
         
@@ -138,8 +134,6 @@ class USB_dev_io:
             buffer_as_bytes[1:] = return_str
             memmove(buffer, buffer_as_bytes, len(buffer_as_bytes))
             
-            #print(bytearray(buffer_as_bytes))
-            #print(len(buffer_as_bytes))
             return len(buffer_as_bytes) - 1
             
         except Exception as e:
@@ -147,7 +141,6 @@ class USB_dev_io:
             import traceback
             traceback.print_exc()
             return 0
-        #"""
 
 class UART_dev_io:
 
@@ -163,8 +156,11 @@ class UART_dev_io:
         self.dev = None
     
     def UART_open(self):
-        try:                
-            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 2.5) 
+        try: 
+            if self.dev != None:
+                self.dev.close()
+                
+            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 3) 
             
             if(self.dev.isOpen() == False):
                 self.dev.open()
@@ -195,7 +191,6 @@ class UART_dev_io:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
             bytes_data = bytearray(data[1:])
             test = self.dev.write(bytes_data)
-
             if test == len(bytes_data):
                 return 1
             else:
@@ -216,6 +211,7 @@ class UART_dev_io:
                 buffer_as_bytes[1:] = return_str
             
             memmove(buffer, buffer_as_bytes, len(buffer_as_bytes))  
+            
             if len(return_str) >= 4:
                 return len(return_str)
             else:
@@ -303,19 +299,27 @@ def main():
     m_lib.ISP_Open.restype = c_uint
     m_lib.ISP_Close.argtypes = [POINTER(io_handle_t)]
     m_lib.ISP_Close.restype = None
-    
-    
 
     ct = m_lib.ISP_Open(byref(m_io_handle_t))
     if (ct != 0):
-        dt = m_lib.ISP_Connect(byref(m_io_handle_t), 50000)
-        if (dt != 0):
+        t = 0
+        r = 0
+        while (t < 50):
+            t = t + 1
             m_lib.ISP_SyncPackNo(byref(m_io_handle_t))
+            r = m_lib.ISP_Connect(byref(m_io_handle_t), 50000)
+            if (r > 0):
+                break
+            print("ISP Connect Retry!")
+         
+        if (r):
+            m_lib.ISP_SyncPackNo(byref(m_io_handle_t))
+            print("ISP Connect Success!")
         else:
-            print("ISP Connect Failed!")
+            print("ISP Connect Fail!")
             return
     else:
-        print("ISP Open Failed!")
+        print("ISP Open Fail!")
         return
 
     m_ucFW_VER = 0x0

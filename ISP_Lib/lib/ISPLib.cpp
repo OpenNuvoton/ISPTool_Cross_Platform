@@ -199,7 +199,7 @@ unsigned int ISP_Connect(io_handle_t* handle, unsigned int dwMilliseconds) {
 	unsigned int ret = FALSE;
 	unsigned int uID;
 
-	if (ISP_Write(handle, CMD_CONNECT, NULL, 0, USBCMD_TIMEOUT)) {
+	if (ISP_Write(handle, CMD_CONNECT, NULL, 0, USBCMD_TIMEOUT_LONG)) {
 		ret = ISP_Read(handle, (unsigned char*)&uID, 4, dwMilliseconds, FALSE);
 	}
 
