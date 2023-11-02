@@ -169,7 +169,7 @@ class UART_dev_io:
             if self.dev != None:
                 self.dev.close()
                 
-            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 3) 
+            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 2) 
             
             if(self.dev.isOpen() == False):
                 self.dev.open()
@@ -200,6 +200,7 @@ class UART_dev_io:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
             bytes_data = bytearray(data[1:])
             test = self.dev.write(bytes_data)
+            #print(test, bytes_data)
             if test == len(bytes_data):
                 return 1
             else:
@@ -220,7 +221,6 @@ class UART_dev_io:
                 buffer_as_bytes[1:] = return_str
             
             memmove(buffer, buffer_as_bytes, len(buffer_as_bytes))  
-
             if len(return_str) >= 4:
                 return len(return_str)
             else:
@@ -381,13 +381,17 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             t = 0
             r = 0
-            while (t < 50):
+            while (t < 250):
+                if self.isUART:
+                    self.UART_dev_io.dev.timeout = 0.04
                 t = t + 1
-                self.lib.ISP_SyncPackNo(byref(self.io_handle_t));
-                r = self.lib.ISP_Connect(byref(self.io_handle_t), 4000)
+                self.io_handle_t.m_uCmdIndex = 1
+                r = self.lib.ISP_Connect(byref(self.io_handle_t), 40)
                 if (r > 0):
+                    if self.isUART:    
+                        self.UART_dev_io.dev.timeout = 2
                     break
-                print("try connect \n")
+                print("  try connect.")
              
             if (r):
                 self.lib.ISP_SyncPackNo(byref(self.io_handle_t));
@@ -538,7 +542,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         ctp = self.chip_type 
         
         #debug
-        ctp = PROJ_M480
+        ctp = PROJ_M0A21
         self.memory_size = 1024 * 256
         self.page_size = 4096
         
