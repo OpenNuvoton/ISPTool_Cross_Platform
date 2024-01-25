@@ -8,10 +8,10 @@ ISPTool_Cross_Platform is a C++ project with sample codes base on different lang
 5. Run the code.
 ## Sample Code Introduce
 ### ISPTool_SampleCode_C99
-  ISPTool_SampleCode_C99 is a simple C code that use Nu-Link2-Pro as the device and support UART interface.
-  In order to use this sample, program the file into Nu-Link2-Pro's data flash and check the data flash base address.
-  Modify function DO_ISP to decide the program data place and length.
-  Connect Nu-Link2-Pro UART2 to target's ISP UART port and press the button on Nu-Link2-Pro (PC.7) to start
+> ISPTool_SampleCode_C99 is a simple C code that use Nu-Link2-Pro as the device and support UART interface.  
+> In order to use this sample, program the file into Nu-Link2-Pro's data flash and check the data flash base address.  
+> Modify function DO_ISP to decide the program data place and length.  
+> Connect Nu-Link2-Pro UART2 to target's ISP UART port and press the button on Nu-Link2-Pro (PC.7) to start.  
 ### ISP_Command_Line_Tool_SampleCode
   
 ### ISP_Tool_SampleCode
