@@ -75,7 +75,7 @@ def GetStaticInfo(self, UID, config):
             
     return chip_name, chip_type, aprom_size, nvm_size, nvm_addr, page_size
         
-def GetDynamicInfo_8051(self, UID, config, memory_size, flash_type):
+def GetDynamicInfo_8051(UID, config, memory_size, flash_type):
     flash_mode = flash_type & 0x3
     ldsel = (config[0] >> 8) & 0x07
     ldrom_size = (0x07 - ldsel) * 1024

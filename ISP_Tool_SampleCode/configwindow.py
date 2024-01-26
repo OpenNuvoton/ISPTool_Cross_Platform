@@ -34,6 +34,7 @@ class ConfigDialog(QDialog):
         self.ui.pushButton_OK.clicked.connect(self.exportFile)
         self.ui.pushButton_Cancel.clicked.connect(self.close)
         self.valid_setting()
+        self.get_config()
     
     # use to import exist json to window
     def get_config(self):

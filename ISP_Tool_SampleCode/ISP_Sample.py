@@ -99,7 +99,6 @@ class USB_dev_io:
             return False
         else: 
             print ('USB get')
-            #print (self.dev)
             return True
     
     def USB_close(self):
@@ -117,7 +116,6 @@ class USB_dev_io:
     def USB_write(self, Ctime, buffer):
         try:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
-            #bytes_data = bytearray(data[1:])
             bytes_data = bytearray(data)
             
             if (self.interface_num != 0):
@@ -125,7 +123,6 @@ class USB_dev_io:
             
             #self.dev.set_nonblocking(1)
             bytes_written = self.dev.write(bytes_data)
-            #print(bytes_written, len(bytes_data))
             if bytes_written >= len(bytes_data):
                 return 1
             else:
@@ -136,7 +133,6 @@ class USB_dev_io:
             import traceback
             traceback.print_exc()
             return 0
-        #"""
         
     def USB_read(self, Ctime, buffer):
         
@@ -154,7 +150,6 @@ class USB_dev_io:
             import traceback
             traceback.print_exc()
             return 0
-        #"""
 
 class UART_dev_io:
 
@@ -170,8 +165,11 @@ class UART_dev_io:
         self.dev = None
     
     def UART_open(self):
-        try:                
-            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 3) 
+        try:  
+            if self.dev != None:
+                self.dev.close()
+                
+            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 2) 
             
             if(self.dev.isOpen() == False):
                 self.dev.open()
@@ -202,7 +200,7 @@ class UART_dev_io:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
             bytes_data = bytearray(data[1:])
             test = self.dev.write(bytes_data)
-            #print(bytes_data, len(bytes_data))
+            #print(test, bytes_data)
             if test == len(bytes_data):
                 return 1
             else:
@@ -223,7 +221,6 @@ class UART_dev_io:
                 buffer_as_bytes[1:] = return_str
             
             memmove(buffer, buffer_as_bytes, len(buffer_as_bytes))  
-            #print(return_str, len(return_str))
             if len(return_str) >= 4:
                 return len(return_str)
             else:
@@ -234,7 +231,6 @@ class UART_dev_io:
             import traceback
             traceback.print_exc()
             return 0
-       
 
 class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -361,51 +357,57 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             self.comboBox_interface.setEnabled(True)
             self.btn_Connect.setText("Connect")
         elif (self.isCAN):
-            if (self.lib.ISP_CAN_Connect(byref(self.io_handle_t), 2500)):
+            t = 0
+            r = 0
+            while (t < 50):
+                t = t + 1
+                r = self.lib.ISP_CAN_Connect(byref(self.io_handle_t), 4000)
+                if (r > 0):
+                    break
+                print("try connect \n")
+             
+            if (r):
                 print("connect \n")
                 self.m_ulDeviceID = self.lib.ISP_CAN_GetDeviceID(byref(self.io_handle_t));
                 print("get id \n")
                 self.lib.ISP_CAN_ReadConfig(byref(self.io_handle_t), byref(self.config));
                 print("get config \n")
-                
-                try:
-                    self.update_flash()
-                except Exception as e:
-                    print("no connect \n")
-                    self.lib.ISP_Close(byref(self.io_handle_t))
-                    reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Connect Fail')
-                    self.connect_flag = False
-                    return
-                    
+                self.update_flash()
                 self.label_Connection.setText("Status: Connected")
                 self.btn_Connect.setText("Disconnect")
                 self.comboBox_interface.setEnabled(False)
             else:
                 ct = False
-
         else:
             t = 0
-            while (not self.lib.ISP_Connect(byref(self.io_handle_t), 50000) and t < 1):
+            r = 0
+            while (t < 250):
+                if self.isUART:
+                    self.UART_dev_io.dev.timeout = 0.04
                 t = t + 1
-                print("try connect \n")
-                
-            self.lib.ISP_SyncPackNo(byref(self.io_handle_t));
-            print("sync \n")
-            self.m_ucFW_VER = self.lib.ISP_GetVersion(byref(self.io_handle_t));
-            print("get version \n")
-            self.m_ulDeviceID = self.lib.ISP_GetDeviceID(byref(self.io_handle_t));
-            print("get id \n")
-            self.lib.ISP_ReadConfig(byref(self.io_handle_t), byref(self.config));
-            print("get config \n")
-            
-            try:
+                self.io_handle_t.m_uCmdIndex = 1
+                r = self.lib.ISP_Connect(byref(self.io_handle_t), 40)
+                if (r > 0):
+                    if self.isUART:    
+                        self.UART_dev_io.dev.timeout = 2
+                    break
+                print("  try connect.")
+             
+            if (r):
+                self.lib.ISP_SyncPackNo(byref(self.io_handle_t));
+                print("sync \n")
+                self.m_ucFW_VER = self.lib.ISP_GetVersion(byref(self.io_handle_t));
+                print("get version \n")
+                self.m_ulDeviceID = self.lib.ISP_GetDeviceID(byref(self.io_handle_t));
+                print("get id \n")
+                self.lib.ISP_ReadConfig(byref(self.io_handle_t), byref(self.config));
+                print("get config \n")
                 self.update_flash()
                 self.label_Connection.setText("Status: Connected")
                 self.btn_Connect.setText("Disconnect")
                 self.comboBox_interface.setEnabled(False)
-            except Exception as e:
+            else:
                 ct = False
-                            
             
         if (not ct and not prev):
             print("no connect \n")
@@ -540,7 +542,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         ctp = self.chip_type 
         
         #debug
-        ctp = PROJ_M451HD
+        ctp = PROJ_M0A21
         self.memory_size = 1024 * 256
         self.page_size = 4096
         
@@ -680,7 +682,6 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())  
             self.configwindow.config_type_M2L31_setup() 
             
-        self.configwindow.get_config()
         self.configwindow.show()
         
     def read_APROM(self):
