@@ -13,6 +13,16 @@ ISPTool_Cross_Platform is a C++ project with sample codes base on different lang
 > Modify function DO_ISP to decide the program data place and length.  
 > Connect Nu-Link2-Pro UART2 to target's ISP UART port and press the button on Nu-Link2-Pro (PC.7) to start.  
 ### ISP_Command_Line_Tool_SampleCode
-  
+> ISP_Command_Line_Tool_SampleCode is a command line tool base on Python3.  
+> It support USB/ UART/ I2C/ SPI/ CAN/ RS485 interfaces in Windows/ Linux/ MacOS interface.  
+> Nu-Link2-Pro is needed in I2C/ SPI/ CAN/ RS485 interfaces.  
+> Make sure that shared library ISPLib.dll/ ISPLib.so has been placed in the same folder of the script isp_command_line.py.  
+> Since the information of NuVoice chip is store in the library GetChipInformation.dll, it only supported in Windows platform.  
+> Install the following Python modules to use this sample: pyserial, hidapi.  
 ### ISP_Tool_SampleCode
-  
+> ISP_Tool_SampleCode is a Python3 tool with GUI made by PyQt5.  
+> It support USB/ UART/ I2C/ SPI/ CAN/ RS485 interfaces in Windows/ Linux/ MacOS interface.  
+> Nu-Link2-Pro is needed in I2C/ SPI/ CAN/ RS485 interfaces.  
+> Make sure that shared library ISPLib.dll/ ISPLib.so has been placed in the same folder of the script ISP_Sample.py  
+> Since the information of NuVoice chip is store in the library GetChipInformation.dll, it only supported in Windows platform.  
+> Install the following Python modules to use this sample: pyserial, hidapi, PtQt5.    
