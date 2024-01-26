@@ -160,7 +160,7 @@ class UART_dev_io:
             if self.dev != None:
                 self.dev.close()
                 
-            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 3) 
+            self.dev = serial.Serial(self.COM_PORT, 115200, timeout = 2) 
             
             if(self.dev.isOpen() == False):
                 self.dev.open()
@@ -245,6 +245,8 @@ def main():
 
     m_DEV_IO = DEV_IO()
     
+    isUART = False
+    
     #USB Version
     m_USB_dev_io = USB_dev_io()
     m_UART_dev_io = UART_dev_io()
@@ -287,6 +289,7 @@ def main():
         m_DEV_IO.read = RWFUNCTYPE(m_UART_dev_io.UART_read)
         m_DEV_IO.write = RWFUNCTYPE(m_UART_dev_io.UART_write)
         m_UART_dev_io.COM_PORT = args.option[1]
+        isUART = True
         
     if os.name == 'nt':  # Windows
         m_lib = ctypes.cdll.LoadLibrary('./ISPLib.dll')
@@ -304,11 +307,15 @@ def main():
     if (ct != 0):
         t = 0
         r = 0
-        while (t < 50):
+        while (t < 250):
             t = t + 1
-            m_lib.ISP_SyncPackNo(byref(m_io_handle_t))
-            r = m_lib.ISP_Connect(byref(m_io_handle_t), 50000)
+            if isUART:
+                m_UART_dev_io.dev.timeout = 0.04
+            m_io_handle_t.m_uCmdIndex = 1
+            r = m_lib.ISP_Connect(byref(m_io_handle_t), 40)
             if (r > 0):
+                if isUART:
+                    m_UART_dev_io.dev.timeout = 2
                 break
             print("ISP Connect Retry!")
          
