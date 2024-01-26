@@ -1,6 +1,8 @@
+import os
+
 from PartNumID import *
 from Flash import *
-#from NuVoice import *
+from NuVoice import *
 
 def GetStaticInfo(self, UID, config):
     chip_name = ""
@@ -57,8 +59,8 @@ def GetStaticInfo(self, UID, config):
             
         aprom_size, nvm_size, nvm_addr = GetDynamicInfo_NuMicro(UID, config, memory_size, flash_type)
         page_size = 1 << (((flash_type & 0x0000FF00) >>  8) + 9)
-    '''
-    else:
+    
+    elif os.name == 'nt':  # Windows
         pConfig = (c_uint * 4)
         pConfig[0] = config[0]
         pConfig[1] = config[1]
@@ -70,11 +72,10 @@ def GetStaticInfo(self, UID, config):
             nvm_size = gNuVoiceChip.dwDataFlashSize
             nvm_addr = gNuVoiceChip.dwDataFlashAddress
             page_size = gNuVoiceChip.dwErasePageSize
-    '''
             
     return chip_name, chip_type, aprom_size, nvm_size, nvm_addr, page_size
         
-def GetDynamicInfo_8051(self, UID, config, memory_size, flash_type):
+def GetDynamicInfo_8051(UID, config, memory_size, flash_type):
     flash_mode = flash_type & 0x3
     ldsel = (config[0] >> 8) & 0x07
     ldrom_size = (0x07 - ldsel) * 1024
