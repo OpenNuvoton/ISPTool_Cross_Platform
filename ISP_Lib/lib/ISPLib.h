@@ -88,8 +88,8 @@ DLL_EXPORT  unsigned int ISP_CAN_Write(io_handle_t* handle, unsigned int uCmd, u
 DLL_EXPORT  unsigned int ISP_CAN_Read(io_handle_t* handle, unsigned int dwMilliseconds);
 
 DLL_EXPORT  unsigned int ISP_CAN_GetDeviceID(io_handle_t* handle);
-DLL_EXPORT	void ISP_CAN_ReadConfig(io_handle_t* handle, unsigned int config[]);
-DLL_EXPORT	void ISP_CAN_UpdateConfig(io_handle_t* handle, unsigned int config[], unsigned int response[]);
+DLL_EXPORT	void ISP_CAN_ReadConfig(io_handle_t* handle, unsigned int config[], bool offset);
+DLL_EXPORT	void ISP_CAN_UpdateConfig(io_handle_t* handle, unsigned int config[], unsigned int response[], bool offset);
 DLL_EXPORT	void ISP_CAN_UpdateAPROM(io_handle_t* handle, unsigned int start_addr, unsigned int total_len, unsigned int cur_addr, unsigned char* buffer, unsigned int* update_len);
 DLL_EXPORT	void ISP_CAN_UpdateDataFlash(io_handle_t* handle, unsigned int start_addr, unsigned int total_len, unsigned int cur_addr, unsigned char* buffer, unsigned int* update_len);
 DLL_EXPORT	unsigned int ISP_CAN_Connect(io_handle_t* handle, unsigned int dwMilliseconds);

@@ -268,10 +268,12 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         elif os.name == 'posix':  # Linux/Unix/MacOS
             self.lib = ctypes.cdll.LoadLibrary('./ISPLib.so')
         
-        self.config = (c_uint * 12)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
-                                    0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF)
-        self.wconfig = (c_uint * 12)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
-                                    0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF)
+        self.config = (c_uint * 14)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                    0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                    0xFFFFFFFF,0xFFFFFFFF)
+        self.wconfig = (c_uint * 14)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                    0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                    0xFFFFFFFF,0xFFFFFFFF)
         
         #self.jconfig = (c_uint * 8)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF)
         
@@ -370,9 +372,12 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 print("connect \n")
                 self.m_ulDeviceID = self.lib.ISP_CAN_GetDeviceID(byref(self.io_handle_t));
                 print("get id \n")
-                self.lib.ISP_CAN_ReadConfig(byref(self.io_handle_t), byref(self.config));
+                self.update_flash()  # to get chip_type only
+                config_offset = {PROJ_M460HD, PROJ_M460LD, PROJ_M2L31} 
+                offset = True if chip_type in config_offset else False
+                self.lib.ISP_CAN_ReadConfig(byref(self.io_handle_t), byref(self.config), offset);
                 print("get config \n")
-                self.update_flash()
+                self.update_flash()  # regular update flash
                 self.label_Connection.setText("Status: Connected")
                 self.btn_Connect.setText("Disconnect")
                 self.comboBox_interface.setEnabled(False)
@@ -510,8 +515,10 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.lib.ISP_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config)
                     self.lib.ISP_ReadConfig(pointer(self.io_handle_t), self.config)
                 else:
-                    self.lib.ISP_CAN_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config)
-                    self.lib.ISP_CAN_ReadConfig(pointer(self.io_handle_t), self.config)
+                    config_offset = {PROJ_M460HD, PROJ_M460LD, PROJ_M2L31} 
+                    offset = True if chip_type in config_offset else False
+                    self.lib.ISP_CAN_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config, offset)
+                    self.lib.ISP_CAN_ReadConfig(pointer(self.io_handle_t), self.config, offset)
         
         self.update_flash()
             
@@ -542,9 +549,9 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         ctp = self.chip_type 
         
         #debug
-        ctp = PROJ_M0A21
-        self.memory_size = 1024 * 256
-        self.page_size = 4096
+        ctp = PROJ_M2L31
+        self.memory_size = 512 * 1024
+        self.page_size = 4 * 1024
         
         if config_setting_str(ctp) == "":
             import ui.config_type_0 as UI  

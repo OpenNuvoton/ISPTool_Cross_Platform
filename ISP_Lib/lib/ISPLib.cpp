@@ -105,13 +105,13 @@ unsigned int ISP_Write(io_handle_t* handle, unsigned int uCmd, unsigned char* pc
 
 
 void ISP_UpdateConfig(io_handle_t* handle, unsigned int config[], unsigned int response[]) {
-	ISP_Write(handle, CMD_UPDATE_CONFIG, (unsigned char*)config, 48, USBCMD_TIMEOUT_LONG);
-	ISP_Read(handle, (unsigned char*)response, 48, USBCMD_TIMEOUT_LONG, TRUE);
+	ISP_Write(handle, CMD_UPDATE_CONFIG, (unsigned char*)config, 56, USBCMD_TIMEOUT_LONG);
+	ISP_Read(handle, (unsigned char*)response, 56, USBCMD_TIMEOUT_LONG, TRUE);
 }
 
 void ISP_ReadConfig(io_handle_t* handle, unsigned int config[]) {
 	ISP_Write(handle, CMD_READ_CONFIG, NULL, 0, USBCMD_TIMEOUT);
-	ISP_Read(handle, (unsigned char*)config, 48, USBCMD_TIMEOUT, TRUE);
+	ISP_Read(handle, (unsigned char*)config, 56, USBCMD_TIMEOUT, TRUE);
 }
 
 void ISP_SyncPackNo(io_handle_t* handle) {
@@ -336,9 +336,10 @@ unsigned int ISP_CAN_GetDeviceID(io_handle_t* handle) {
 	return UID;
 }
 
-void ISP_CAN_ReadConfig(io_handle_t* handle, unsigned int config[]) {
-	for (int i = 0; i < 4; i++) {
-		if (ISP_CAN_Write(handle, CAN_CMD_READ_CONFIG, 0x00300000 + 4 * i)) {
+void ISP_CAN_ReadConfig(io_handle_t* handle, unsigned int config[], bool offset) {
+	int offset_v = (offset) ? 0x0 : 0x0F000000;
+	for (int i = 0; i < 14; i++) {
+		if (ISP_CAN_Write(handle, CAN_CMD_READ_CONFIG, offset_v + 0x00300000 + 4 * i)) {
 			if (ISP_CAN_Read(handle)) {
 				config[i] = *((unsigned long*)&(handle->ac_buffer[5]));
 			}
@@ -346,9 +347,10 @@ void ISP_CAN_ReadConfig(io_handle_t* handle, unsigned int config[]) {
 	}
 }
 
-void ISP_CAN_UpdateConfig(io_handle_t* handle, unsigned int config[], unsigned int response[]) {
-	for (int i = 0; i < 4; i++) {
-		if (ISP_CAN_Write(handle, 0x00300000 + 4 * i, config[i])) {
+void ISP_CAN_UpdateConfig(io_handle_t* handle, unsigned int config[], unsigned int response[], bool offset) {
+	int offset_v = (offset) ? 0x0 : 0x0F000000;
+	for (int i = 0; i < 14; i++) {
+		if (ISP_CAN_Write(handle, offset_v + 0x00300000 + 4 * i, config[i])) {
 			if (ISP_CAN_Read(handle)) {
 				response[i] = *((unsigned long*)&(handle->ac_buffer[5]));
 			}

@@ -23,8 +23,10 @@ class ConfigDialog(QDialog):
         self.ui = ui
         self.ui.setupUi(self)
         self.setWindowTitle("Config Setting")
-        self.wconfig = (c_uint * 4)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF)
-        for i in range(0,4):
+        self.wconfig = (c_uint * 14)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                     0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                     0xFFFFFFFF,0xFFFFFFFF)
+        for i in range(0, 14):
             self.wconfig[i] = self.parent.wconfig[i]
         
         self.size = float(self.parent.memory_size / 1024)
@@ -38,22 +40,15 @@ class ConfigDialog(QDialog):
     
     # use to import exist json to window
     def get_config(self):
-        for i in range(0,4):
+        for i in range(0, 14):
             self.wconfig[i] = self.parent.config[i] if (self.parent.connect_flag == True) else self.parent.wconfig[i]
-        
-        cfg_text_0 = self.wconfig[0]
-        cfg_text_1 = self.wconfig[1]
-        cfg_text_2 = self.wconfig[2]
-        cfg_text_3 = self.wconfig[3]
-
-        cfg_texts = [cfg_text_0, cfg_text_1, cfg_text_2, cfg_text_3]
             
-        for i, cfg_text in enumerate(cfg_texts):
+        for i in range(0, 14):
             line_edit_name = f'lineEdit_config{i}'
             print(line_edit_name)
             if hasattr(self.ui, line_edit_name):
                 line_edit = getattr(self.ui, line_edit_name)
-                line_edit.setText(f'{cfg_text:08X}')
+                line_edit.setText(f'{self.wconfig[i]:08X}')
                 print(line_edit.text())
 
         if hasattr(self.ui, 'gridGroupBox_boot'):
@@ -140,6 +135,46 @@ class ConfigDialog(QDialog):
         self.ui.lineEdit_data_address.setReadOnly(True)
         self.ui.checkBox_dataflash.setChecked(self.getBits(0, 0, 1, 0))
         
+    def secure_conceal_pagesize_template(self):
+        self.ui.checkBox_dataflash.stateChanged.connect(lambda: (self.checkBit(not self.ui.checkBox_dataflash.isChecked(), 0, 0),
+                                                                 self.ui.doubleSpinBox_pagesize.setEnabled(self.ui.checkBox_dataflash.isChecked()),
+                                                                 self.updateValue((0xFFFFFFFF if not self.ui.checkBox_dataflash.isChecked() else int(1024 * (self.size - self.ui.doubleSpinBox_pagesize.value())) ), 1),
+                                                                 self.ui.lineEdit_data_address.setText(f'{(0xFFFFFFFF if not self.ui.checkBox_dataflash.isChecked() else (int(1024 * (self.size - self.ui.doubleSpinBox_pagesize.value())))):08X}')))
+        self.ui.doubleSpinBox_pagesize.setEnabled(self.ui.checkBox_dataflash.isChecked())
+        self.ui.doubleSpinBox_pagesize.setSingleStep(self.page_size)
+        self.ui.doubleSpinBox_pagesize.setRange(self.page_size, self.size - self.page_size)
+        self.ui.doubleSpinBox_pagesize.valueChanged.connect(lambda: (self.updateValue(int(1024 * (self.size - self.ui.doubleSpinBox_pagesize.value())), 1),
+                                                                     self.ui.lineEdit_data_address.setText(f'{(int(1024 * (self.size - self.ui.doubleSpinBox_pagesize.value()))):08X}')))
+        self.ui.doubleSpinBox_pagesize.lineEdit().setReadOnly(True)
+        self.ui.lineEdit_data_address.setReadOnly(True)
+        self.ui.checkBox_dataflash.setChecked(self.getBits(0, 0, 1, 0))
+        self.ui.checkBox_secure_conceal.stateChanged.connect(lambda: (self.ui.checkBox_dataflash.setEnabled(not self.ui.checkBox_secure_conceal.isChecked()),
+                                                                 self.ui.checkBox_dataflash.setChecked(False if self.ui.checkBox_secure_conceal.isChecked() else self.ui.checkBox_dataflash.isChecked()),
+                                                                 self.checkBit(1, 0, 0),
+                                                                 self.ui.doubleSpinBox_pagesize.setEnabled(False),
+                                                                 self.updateValue(0xFFFFFFFF, 1),
+                                                                 self.ui.lineEdit_data_address.setText('0xFFFFFFFF'),
+                                                                 self.updateValue((0x55AA5AA5 if self.ui.checkBox_secure_conceal.isChecked() else 0xFFFFFFFF), 6),
+                                                                 self.ui.lineEdit_baddress.setText(f'{(int((self.size - self.page_size) * 1024) if self.ui.checkBox_secure_conceal.isChecked() else 0xFFFFFFFF):08X}'),
+                                                                 self.ui.lineEdit_pcount.setText(f'{(1 if self.ui.checkBox_secure_conceal.isChecked() else 0)}'),
+                                                                 self.ui.lineEdit_baddress.setEnabled(self.ui.checkBox_secure_conceal.isChecked()),
+                                                                 self.ui.lineEdit_pcount.setEnabled(self.ui.checkBox_secure_conceal.isChecked()))),
+                                                                 
+        self.ui.lineEdit_baddress.setEnabled(self.ui.checkBox_secure_conceal.isChecked())
+        self.ui.lineEdit_pcount.setEnabled(self.ui.checkBox_secure_conceal.isChecked())
+        self.ui.lineEdit_baddress.editingFinished.connect(lambda: ( self.ui.lineEdit_baddress.setText(f'{(int(self.ui.lineEdit_baddress.text(), 16) & 0xFFFFF000):08X}'),
+                                                                 self.updateValue((int(self.ui.lineEdit_baddress.text(),16) & 0xFFFFF000), 4),
+                                                                 self.ui.lineEdit_pcount.setText(f'{int(self.ui.lineEdit_pcount.text()) if int(self.ui.lineEdit_pcount.text())<= ((self.size - int(self.ui.lineEdit_baddress.text(), 16)/1024))/self.page_size else int((self.size - int(self.ui.lineEdit_baddress.text(), 16)/1024)/self.page_size)}'),
+                                                                 self.updateValue(int(self.ui.lineEdit_pcount.text()), 5)))
+        self.ui.lineEdit_pcount.editingFinished.connect(lambda: ( self.ui.lineEdit_pcount.setText(f'{int(self.ui.lineEdit_pcount.text())if int(self.ui.lineEdit_pcount.text())<= (self.size - int(self.ui.lineEdit_baddress.text(), 16)/1024)/self.page_size else int((self.size - int(self.ui.lineEdit_baddress.text(), 16)/1024)/self.page_size)}'),
+                                                               self.updateValue(int(self.ui.lineEdit_pcount.text()), 5))) 
+
+    def check_secure_region(self):
+        for i in range (0, 32):
+            getattr(self.ui, (f'checkBox_{i}')).stateChanged.connect(lambda _, i=i: self.checkBit(not getattr(self.ui, (f'checkBox_{i}')).isChecked(), i, 8))
+        for i in range (0, 32):
+            getattr(self.ui, (f'checkBox_{i + 32}')).stateChanged.connect(lambda _, i=i: self.checkBit(not getattr(self.ui, (f'checkBox_{i+32}')).isChecked(), i, 9))
+
     def radioButton_bt_template_2(self):
         self.ui.radioButton_bt_0_0.setChecked(self.getBits(7, 0, 1, 0))
         self.ui.radioButton_bt_0_1.setChecked(self.getBits(7, 1, 1, 0))
@@ -819,7 +854,7 @@ class ConfigDialog(QDialog):
         self.ui.radioButton_mf_1.setChecked(self.getBits(0, 1, 2, 3)) 
         self.ui.radioButton_mf_2.setChecked(self.getBits(0, 2, 2, 3))
         self.ui.radioButton_mf_3.setChecked(self.getBits(0, 3, 2, 3))
-        self.doubleSpinBox_pagesize_template()
+        self.secure_conceal_pagesize_template()
         self.ui.checkBox_security_lock.stateChanged.connect(lambda: (self.checkBit(not self.ui.checkBox_security_lock.isChecked(), 1, 0),
                                                                      self.ui.lineEdit_security.setEnabled(self.ui.checkBox_security_lock.isChecked()),
                                                                      self.ui.lineEdit_protect.setEnabled(self.ui.checkBox_security_lock.isChecked()),
@@ -831,7 +866,26 @@ class ConfigDialog(QDialog):
         self.ui.lineEdit_protect.editingFinished.connect(lambda: (self.ui.lineEdit_protect.setText(f'{((int(self.ui.lineEdit_protect.text(), base = 16) if self.ui.checkBox_security_lock.isChecked() else 0x5A)& 0x5A):02X}'),
                                                                   self.updateBits(8,(int(self.ui.lineEdit_protect.text(), base = 16) if self.ui.checkBox_security_lock.isChecked() else 0x5A), 8, 2)))                                                                                                                                    
         self.ui.checkBox_security_lock.setChecked(self.getBits(1, 0, 1, 0))
+        self.check_secure_region()
         self.checkBox_ice_lock_template(11)
+        self.ui.radioButton_lv0.clicked.connect(lambda: (self.updateBits(0, 0xFFFFFFFF, 32, 10),
+                                                         self.ui.radioButton_pin0.setChecked(True),
+                                                         self.ui.GroupBox_pin.setEnabled(False)))
+        self.ui.radioButton_lv1.clicked.connect(lambda: (self.updateBits(0, 0x005A, 16, 10),
+                                                         self.ui.radioButton_pin0.setChecked(True),
+                                                         self.ui.GroupBox_pin.setEnabled(False)))
+        self.ui.radioButton_lv2.clicked.connect(lambda: (self.updateBits(0, 0x335A, 16, 10),
+                                                         self.ui.radioButton_pin0.setChecked(True),
+                                                         self.ui.GroupBox_pin.setEnabled(True)))
+        self.ui.radioButton_lv3.clicked.connect(lambda: (self.updateBits(0, 0x995A, 16, 10),
+                                                         self.ui.radioButton_pin0.setChecked(True),
+                                                         self.ui.GroupBox_pin.setEnabled(True)))
+        self.ui.radioButton_pin0.clicked.connect(lambda: self.updateBits(0, 0xA, 4, 10))
+        self.ui.radioButton_pin1.clicked.connect(lambda: self.updateBits(0, 0xB, 4, 10))
+        self.ui.radioButton_pin2.clicked.connect(lambda: self.updateBits(0, 0xC, 4, 10))
+        self.ui.radioButton_pin3.clicked.connect(lambda: self.updateBits(0, 0xD, 4, 10))
+        self.ui.radioButton_lv0.setChecked(True)
+        self.ui.radioButton_pin0.setChecked(True)
                      
     def valid_setting(self):
         reg_key8 = QRegExpValidator(QRegExp("[0-9A-Fa-f]{1,8}"))
@@ -849,7 +903,7 @@ class ConfigDialog(QDialog):
             line_edit.setValidator(reg_key2)
                      
     def exportFile(self):
-        for i in range(0,4):
+        for i in range(0, 14):
             self.parent.wconfig[i] = self.wconfig[i]
         print("Success")
         self.close()
