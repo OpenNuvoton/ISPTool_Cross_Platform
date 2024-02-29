@@ -421,7 +421,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             self.connect_flag = False
                  
     def update_flash(self):
-        chip_name, chip_type, aprom_size, nvm_size, nvm_addr, page_size = GetStaticInfo(self, self.m_ulDeviceID, self.config)
+        chip_name, chip_type, aprom_size, nvm_size, nvm_addr, page_size = GetStaticInfo(self.m_ulDeviceID, self.config)
         self.label_DeviceID.setText("Device ID: " + hex(self.m_ulDeviceID))
         self.label_DeviceID_2.setText("Device Name: " + chip_name)
         self.chip_type = chip_type

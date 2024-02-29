@@ -53,7 +53,8 @@ def GetStaticInfo(UID, config):
         if ((chip_type == PROJ_NUC400AE) or (chip_type == PROJ_M451HD) or (chip_type == PROJ_M471) or (chip_type == PROJ_M0564) 
              or (chip_type == PROJ_NUC1262) or (chip_type == PROJ_NUC1263) or (chip_type == PROJ_M031_512K) or (chip_type == PROJ_M031_256K)):
             flash_type |= 0x200
-        elif ((chip_type == PROJ_M480) or (chip_type == PROJ_M480LD) or (chip_type == PROJ_M460HD) or (chip_type == PROJ_M460LD)):
+        elif ((chip_type == PROJ_M480) or (chip_type == PROJ_M480LD) or (chip_type == PROJ_M460HD) or (chip_type == PROJ_M460LD)
+             or (chip_type == PROJ_M2L31)):
             flash_type |= 0x300
             
         aprom_size, nvm_size, nvm_addr = GetDynamicInfo_NuMicro(UID, config, memory_size, flash_type)

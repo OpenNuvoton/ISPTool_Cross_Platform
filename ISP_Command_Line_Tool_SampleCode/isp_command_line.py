@@ -433,12 +433,13 @@ def main():
     
     elif args.config:
         arg_count = len(args.config)
-        m_wconfig = (c_uint * 12)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
-                                  0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF)
+        m_wconfig = (c_uint * 14)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                  0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                  0xFFFFFFFF,0xFFFFFFFF)
         if arg_count < 1:
             print("No Writing Config!")
             return
-        elif arg_count < 13:
+        elif arg_count < 15:
             for i in range(arg_count):
                 m_wconfig[i] = int(args.config[i], 0)
                 
