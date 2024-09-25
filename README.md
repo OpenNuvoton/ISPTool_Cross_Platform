@@ -20,9 +20,9 @@ ISPTool_Cross_Platform is a C++ project with sample codes base on different lang
 > Since the information of NuVoice chip is store in the library GetChipInformation.dll, it only supported in Windows platform.  
 > Install the following Python modules to use this sample: pyserial, hidapi.  
 ### ISP_Tool_SampleCode
-> ISP_Tool_SampleCode is a Python3 tool with GUI made by PyQt5.  
+> ISP_Tool_SampleCode is a Python3 tool with GUI made by pyside6.  
 > It support USB/ UART/ I2C/ SPI/ CAN/ RS485 interfaces in Windows/ Linux/ MacOS interface.  
 > Nu-Link2-Pro is needed in I2C/ SPI/ CAN/ RS485 interfaces.  
 > Make sure that shared library ISPLib.dll/ ISPLib.so has been placed in the same folder of the script ISP_Sample.py  
 > Since the information of NuVoice chip is store in the library GetChipInformation.dll, it only supported in Windows platform.  
-> Install the following Python modules to use this sample: pyserial, hidapi, PtQt5.    
+> Install the following Python modules to use this sample: pyserial, hidapi, pyside6.    
