@@ -4,9 +4,9 @@ from ctypes import *
 import json
 import os
 
-from PyQt5.QtCore import QDateTime, QPointF, QRegExp, Qt, QTimer
-from PyQt5.QtGui import QColor, QIntValidator, QRegExpValidator, QValidator
-from PyQt5.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QComboBox, QDateTimeEdit,
+from PySide6.QtCore import QDateTime, QPointF, QRegularExpression, Qt, QTimer
+from PySide6.QtGui import QColor, QIntValidator, QRegularExpressionValidator, QValidator
+from PySide6.QtWidgets import (QApplication, QButtonGroup, QCheckBox, QComboBox, QDateTimeEdit,
         QDial, QDialog, QFileDialog, QFormLayout, QGridLayout, QGroupBox, QHBoxLayout, QLabel, 
         QLineEdit, QMessageBox, QPlainTextEdit, QProgressBar, QPushButton, QRadioButton, QScrollBar, 
         QSizePolicy, QSlider, QSpinBox, QStyleFactory, QTableWidget, QTabWidget, QTextEdit,
@@ -886,10 +886,42 @@ class ConfigDialog(QDialog):
         self.ui.radioButton_pin3.clicked.connect(lambda: self.updateBits(0, 0xD, 4, 10))
         self.ui.radioButton_lv0.setChecked(True)
         self.ui.radioButton_pin0.setChecked(True)
-                     
+        
+    def config_type_M2003_setup(self):
+        self.radioButton_bt_template_2()
+        self.ui.radioButton_io_0.clicked.connect(lambda: self.updateBits(10, 1, 1, 0))
+        self.ui.radioButton_io_1.clicked.connect(lambda: self.updateBits(10, 0, 1, 0))
+        self.ui.radioButton_io_0.setChecked(self.getBits(10, 1, 1, 0))
+        self.ui.radioButton_io_1.setChecked(self.getBits(10, 0, 1, 0))
+        self.radioButton_bw_template_4(21)
+        self.checkBox_bw_0_template(19)
+        self.checkBox_bw_1_template(20)
+        self.ui.radioButton_mode_0.clicked.connect(lambda: self.updateBits(25, 1, 1, 0))
+        self.ui.radioButton_mode_1.clicked.connect(lambda: self.updateBits(25, 0, 1, 0))
+        self.ui.radioButton_mode_0.setChecked(self.getBits(25, 1, 1, 0))
+        self.ui.radioButton_mode_1.setChecked(self.getBits(25, 0, 1, 0))
+        self.ui.radioButton_wdt_0.clicked.connect(lambda: (self.updateBits(31, 1, 1, 0),
+                                                           self.updateBits(3, 3, 2, 0)))
+        self.ui.radioButton_wdt_1.clicked.connect(lambda: (self.updateBits(31, 0, 1, 0),
+                                                           self.updateBits(3, 0, 2, 0)))
+        self.ui.radioButton_wdt_2.clicked.connect(lambda: (self.updateBits(31, 0, 1, 0),
+                                                           self.updateBits(3, 3, 2, 0)))
+        self.ui.radioButton_wdt_0.setChecked(self.getBits(31, 1, 1, 0))
+        self.ui.radioButton_wdt_1.setChecked(self.getBits(31, 0, 1, 0) and self.getBits(3, 0, 2, 0))
+        self.ui.radioButton_wdt_2.setChecked(self.getBits(31, 0, 1, 0) and self.getBits(3, 3, 2, 0))
+        self.ui.checkBox_security_lock.stateChanged.connect(lambda: (self.checkBit(not self.ui.checkBox_security_lock.isChecked(), 1, 0),
+                                                                     self.ui.lineEdit_security.setEnabled(self.ui.checkBox_security_lock.isChecked()),
+                                                                     self.ui.lineEdit_security.setText(f'{(0x00 if self.ui.checkBox_security_lock.isChecked() else 0x5A):02X}'),
+                                                                     self.updateBits(0, (0x00 if self.ui.checkBox_security_lock.isChecked() else 0x5A), 8, 2)))
+        self.ui.lineEdit_security.editingFinished.connect(lambda: (self.ui.lineEdit_security.setText(f'{((int(self.ui.lineEdit_security.text(), base = 16) if self.ui.checkBox_security_lock.isChecked() else 0x5A)& 0x5A):02X}'),
+                                                                   self.updateBits(0,(int(self.ui.lineEdit_security.text(), base = 16) if self.ui.checkBox_security_lock.isChecked() else 0x5A), 8, 2)))                                                                   
+        self.ui.checkBox_security_lock.setChecked(self.getBits(1, 0, 1, 0))
+        
+        self.checkBox_ice_lock_template(12)
+        
     def valid_setting(self):
-        reg_key8 = QRegExpValidator(QRegExp("[0-9A-Fa-f]{1,8}"))
-        reg_key2 = QRegExpValidator(QRegExp("[0-9A-Fa-f]{1,2}"))
+        reg_key8 = QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f]{1,8}"))
+        reg_key2 = QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f]{1,2}"))
         if hasattr(self.ui, 'lineEdit_data_address'):
             line_edit = getattr(self.ui, 'lineEdit_data_address')
             line_edit.setValidator(reg_key8)

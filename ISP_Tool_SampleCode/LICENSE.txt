@@ -1,0 +1,7 @@
+This program is licensed under the Lesser General Public License (LGPL).
+
+PySide6, which is used in this project, is licensed under the LGPL, and the project
+is compliant with the terms of this license.
+
+You are free to use, modify, and distribute this program under the terms of the LGPL.
+For more details, see the LGPL License at https://www.gnu.org/licenses/lgpl-3.0.html.

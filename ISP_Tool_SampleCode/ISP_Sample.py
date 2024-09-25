@@ -1,4 +1,14 @@
-import ctypes
+# This program is licensed under the LGPL (Lesser General Public License).
+# It uses PySide6, which is distributed under the LGPL.
+#
+# You are free to use, modify, and distribute this program under the
+# terms of the LGPL, as long as you comply with the requirements of
+# the license, including making modifications publicly available if
+# required by the LGPL.
+#
+# PySide6 is licensed under the LGPL, and this program adheres to
+# the conditions and obligations of that license.import ctypes
+
 import os
 import serial
 import sys 
@@ -8,7 +18,8 @@ import time
 import hid
 
 from ctypes import *
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtCore import QThread, QObject, Signal
 from mainwindow import Ui_MainWindow
 from configwindow import ConfigDialog
 
@@ -232,6 +243,14 @@ class UART_dev_io:
             traceback.print_exc()
             return 0
 
+class Worker(QObject):
+    finished = Signal()
+    error = Signal(str)
+    
+    def __init__(self, ui):
+        super().__init__()
+        self.ui = ui
+
 class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self) # Call the inherited classes __init__ method
@@ -335,13 +354,11 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.lib.ISP_Open.argtypes = [POINTER(io_handle_t)]
         self.lib.ISP_Open.restype = c_uint
-        self.lib.ISP_Close.argtypes = [POINTER(io_handle_t)]
-        self.lib.ISP_Close.restype = None
+        
         
         ct = False
-        
-        print("UI Open " + str(self.connect_flag) + " " + str(self.io_handle_t.dev_open))
-        if (self.connect_flag == False):
+
+        if not self.connect_flag:
             ct = self.lib.ISP_Open(byref(self.io_handle_t))
             self.connect_flag = False if (ct == 0) else True;
             if (self.connect_flag == False):
@@ -359,67 +376,57 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             self.comboBox_interface.setEnabled(True)
             self.btn_Connect.setText("Connect")
         elif (self.isCAN):
-            t = 0
-            r = 0
-            while (t < 50):
-                t = t + 1
-                r = self.lib.ISP_CAN_Connect(byref(self.io_handle_t), 4000)
-                if (r > 0):
-                    break
-                print("try connect \n")
-             
-            if (r):
-                print("connect \n")
-                self.m_ulDeviceID = self.lib.ISP_CAN_GetDeviceID(byref(self.io_handle_t));
-                print("get id \n")
-                self.update_flash()  # to get chip_type only
-                config_offset = {PROJ_M460HD, PROJ_M460LD, PROJ_M2L31} 
-                offset = True if chip_type in config_offset else False
-                self.lib.ISP_CAN_ReadConfig(byref(self.io_handle_t), byref(self.config), offset);
-                print("get config \n")
-                self.update_flash()  # regular update flash
-                self.label_Connection.setText("Status: Connected")
-                self.btn_Connect.setText("Disconnect")
-                self.comboBox_interface.setEnabled(False)
-            else:
-                ct = False
+            ct = self.attempt_connection("CAN")
         else:
-            t = 0
-            r = 0
-            while (t < 250):
-                if self.isUART:
-                    self.UART_dev_io.dev.timeout = 0.04
-                t = t + 1
-                self.io_handle_t.m_uCmdIndex = 1
-                r = self.lib.ISP_Connect(byref(self.io_handle_t), 40)
-                if (r > 0):
-                    if self.isUART:    
-                        self.UART_dev_io.dev.timeout = 2
-                    break
-                print("  try connect.")
-             
-            if (r):
-                self.lib.ISP_SyncPackNo(byref(self.io_handle_t));
-                print("sync \n")
-                self.m_ucFW_VER = self.lib.ISP_GetVersion(byref(self.io_handle_t));
-                print("get version \n")
-                self.m_ulDeviceID = self.lib.ISP_GetDeviceID(byref(self.io_handle_t));
-                print("get id \n")
-                self.lib.ISP_ReadConfig(byref(self.io_handle_t), byref(self.config));
-                print("get config \n")
-                self.update_flash()
-                self.label_Connection.setText("Status: Connected")
-                self.btn_Connect.setText("Disconnect")
-                self.comboBox_interface.setEnabled(False)
-            else:
-                ct = False
+            ct = self.attempt_connection("")
             
         if (not ct and not prev):
-            print("no connect \n")
-            self.lib.ISP_Close(byref(self.io_handle_t))
-            reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Connect Fail')
-            self.connect_flag = False
-                 
+            self.update_disconnected_status()
+    
+    def attempt_connection(self, flag):
+        t = 0
+        r = 0
+        if flag == "CAN":
+            for attempt in range(0, 50):
+                if self.lib.ISP_CAN_Connect(byref(self.io_handle_t), 4000):       
+                    self.m_ulDeviceID = self.lib.ISP_CAN_GetDeviceID(byref(self.io_handle_t));
+                    self.update_flash()  # to get chip_type only
+                    config_offset = {PROJ_M460HD, PROJ_M460LD, PROJ_M2L31} 
+                    offset = True if chip_type in config_offset else False
+                    self.lib.ISP_CAN_ReadConfig(byref(self.io_handle_t), byref(self.config), offset);
+                    self.update_flash()  # regular update flash
+                    self.label_Connection.setText("Status: Connected")
+                    self.btn_Connect.setText("Disconnect")
+                    self.comboBox_interface.setEnabled(False)
+                    return True                    
+            return False
+        else:
+            if self.isUART:
+                self.UART_dev_io.dev.timeout = 0.04
+            for attempt in range(0, 250):
+                self.io_handle_t.m_uCmdIndex = 1
+                if self.lib.ISP_Connect(byref(self.io_handle_t), 40):
+                    if self.isUART:    
+                        self.UART_dev_io.dev.timeout = 2
+                    self.lib.ISP_SyncPackNo(byref(self.io_handle_t));
+                    self.m_ucFW_VER = self.lib.ISP_GetVersion(byref(self.io_handle_t));
+                    self.m_ulDeviceID = self.lib.ISP_GetDeviceID(byref(self.io_handle_t));
+                    self.lib.ISP_ReadConfig(byref(self.io_handle_t), byref(self.config));
+                    self.update_flash()
+                    self.label_Connection.setText("Status: Connected")
+                    self.btn_Connect.setText("Disconnect")
+                    self.comboBox_interface.setEnabled(False)
+                    return True
+            return False
+                
+    def update_disconnected_status(self):
+        self.lib.ISP_Close.argtypes = [POINTER(io_handle_t)]
+        self.lib.ISP_Close.restype = None
+        
+        self.lib.ISP_Close(byref(self.io_handle_t))
+        reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Connect Fail')
+        self.connect_flag = False
+        
     def update_flash(self):
         chip_name, chip_type, aprom_size, nvm_size, nvm_addr, page_size = GetStaticInfo(self.m_ulDeviceID, self.config)
         self.label_DeviceID.setText("Device ID: " + hex(self.m_ulDeviceID))
@@ -687,7 +694,11 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         elif config_setting_str(ctp) == "M2L31":
             import ui.config_type_M2L31 as UI   
             self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())  
-            self.configwindow.config_type_M2L31_setup() 
+            self.configwindow.config_type_M2L31_setup()
+        elif config_setting_str(ctp) == "M2003":
+            import ui.config_type_M2003 as UI   
+            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())  
+            self.configwindow.config_type_M2003_setup()
             
         self.configwindow.show()
         

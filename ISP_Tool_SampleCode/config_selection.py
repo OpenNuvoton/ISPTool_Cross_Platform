@@ -1,5 +1,5 @@
 from PartNumID import *
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 config_type_M030G = {PROJ_M030G, PROJ_M031GPON}
 config_type_M031 = {PROJ_M031_128K, PROJ_M031_64K, PROJ_M031_32K, PROJ_M031_16K, PROJ_M031_512K, PROJ_M031_256K}
@@ -9,6 +9,7 @@ config_type_M051D = {PROJ_M051DN, PROJ_M051DE}
 config_type_M0564 = {PROJ_NUC121, PROJ_M0564, PROJ_NUC1261}
 config_type_M058 = {PROJ_M058SAN}
 config_type_M0A21 = {PROJ_M0A21}
+config_type_M2003 = {PROJ_M2003} 
 config_type_M2351 = {PROJ_M2351} 
 config_type_M2354 = {PROJ_M2354ES, PROJ_M2354} 
 config_type_M251 = {PROJ_M252_C, PROJ_M252_D, PROJ_M252_E, PROJ_M252_G}
@@ -105,6 +106,8 @@ def config_setting_str(chip_type):
         return "M471"
     elif (chip_type in config_type_M2L31):
         return "M2L31"
+    elif (chip_type in config_type_M2003):
+        return "M2003"
         
     return ""
 
