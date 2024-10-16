@@ -40,6 +40,7 @@ typedef struct
 	unsigned int bResendFlag;
 	unsigned char m_usCheckSum;
 	unsigned int m_uCmdIndex;
+	unsigned int m_intf;
 	unsigned char ac_buffer[65];
 	void* dev_io;
 	DEV_IO m_dev_io;

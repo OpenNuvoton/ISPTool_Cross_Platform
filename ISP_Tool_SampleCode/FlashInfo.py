@@ -9,15 +9,19 @@ def GetStaticInfo(UID, config):
     chip_type = 0x0
     memory_size = 0
     flash_type = 0
+    aprom_size = 0
+    nvm_size = 0
+    nvm_addr = 0
     dataflash_size = 0
     page_size = 0
     table_len = len(PartNumIDs)
+    
     for i in range(table_len):
         if (UID == PartNumIDs[i][1]):
             chip_name = PartNumIDs[i][0]
             chip_type = PartNumIDs[i][2]
             break
-            
+
     if chip_type >= 0x80:
         # type 8051
         DID = UID & 0x0000FFFF
@@ -28,7 +32,7 @@ def GetStaticInfo(UID, config):
                 flash_type = Flash_8051[i][4]
                 break
         aprom_size, nvm_size, nvm_addr = GetDynamicInfo_8051(UID, config, memory_size, flash_type)
-        
+
     elif chip_type != 0x0:
         # type Numicro
         flash_table_len = len(Flash_NuMicro)
@@ -60,11 +64,13 @@ def GetStaticInfo(UID, config):
             
         aprom_size, nvm_size, nvm_addr = GetDynamicInfo_NuMicro(UID, config, memory_size, flash_type)
         page_size = 1 << (((flash_type & 0x0000FF00) >>  8) + 9)
-    
+
     elif os.name == 'nt':  # Windows
-        pConfig = (c_uint * 4)
-        pConfig[0] = config[0]
-        pConfig[1] = config[1]
+        pConfig = (c_uint * 4)()
+        temp_list = list(pConfig)
+        temp_list[0] = config[0]
+        temp_list[1] = config[1]
+        pConfig = (c_int * 4)(*temp_list)
         
         if get_NuVoice_info(UID, pConfig):
             chip_name = gNuVoiceChip.sChipName.split('\0', 1)[0]
@@ -73,7 +79,7 @@ def GetStaticInfo(UID, config):
             nvm_size = gNuVoiceChip.dwDataFlashSize
             nvm_addr = gNuVoiceChip.dwDataFlashAddress
             page_size = gNuVoiceChip.dwErasePageSize
-            
+
     return chip_name, chip_type, aprom_size, nvm_size, nvm_addr, page_size
         
 def GetDynamicInfo_8051(UID, config, memory_size, flash_type):

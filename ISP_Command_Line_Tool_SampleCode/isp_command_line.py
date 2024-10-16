@@ -28,6 +28,7 @@ class io_handle_t(Structure):
         ("bResendFlag", c_uint),
         ("m_usCheckSum",c_ubyte),
         ("m_uCmdIndex",c_uint),
+        ("m_intf",c_uint),
         ("ac_buffer",c_ubyte * 65),
         ("dev_io",POINTER(c_void_p)),
         ("m_dev_io",DEV_IO),
@@ -36,61 +37,80 @@ class io_handle_t(Structure):
 class USB_dev_io:
 
     dev = None
-    interface_num = 0
     
     def _init_(self):
         self.dev = None
-        self.interface_num = 0
     
     def USB_init(self):
         self.dev = hid.device()
     
     def USB_open(self):
-        test = 0;
+        test = False;
         if self.dev == None:
             self.dev = hid.device()
             
         try:
             self.dev.open(0x0416, 0x3F00)
-        except Exception as e:
-            test = 1
+            test = True;
+        except:
+            pass;
             
-        if (test > 0):
+        if (not test):
             try:
                 self.dev.open(0x0416, 0xA316)
-            except Exception as e:
-                test = 2
+                test = True;
+            except:
+                pass;
         
-        if (test > 1):
+        if (not test):
             try:
-                self.dev.open(0x0416, 0x5201)
-            except Exception as e:
-                test = 3
+                for device_info in hid.enumerate(0x0416, 0x5201): 
+                    if device_info['interface_number'] == 5:
+                        self.dev.open_path(device_info['path'])
+                        test = True;
+            except:
+                pass;
                 
-        if (test > 2):
+        if (not test):
             try:
-                self.dev.open(0x0416, 0x5203)
-            except Exception as e:
-                test = 4
+                for device_info in hid.enumerate(0x0416, 0x5203):  
+                    if device_info['interface_number'] == 5:
+                        self.dev.open_path(device_info['path']) 
+                        test = True;                       
+            except:
+                pass;
                 
-        if (test > 3):
+        if (not test):
             try:
-                self.dev.open(0x0416, 0x2006)
-            except Exception as e:
-                test = 5
+                for device_info in hid.enumerate(0x0416, 0x2006):  
+                    if device_info['interface_number'] == 4:
+                        self.dev.open_path(device_info['path']) 
+                        test = True;                         
+            except:
+                pass;
                 
-        if (test > 4):
+        if (not test):
+            try:
+                #self.dev.open(0x0416, 0x2006)
+                for device_info in hid.enumerate(0x0416, 0x2009):  
+                    if device_info['interface_number'] == 4:
+                        self.dev.open_path(device_info['path']) 
+                        test = True;                       
+            except:
+                pass;
+                
+        if (not test):
             try:
                 self.dev.open(0x0416, 0x3F10)
-            except Exception as e:
-                test = 6
-            
-        if (test > 5):
-            print('USB no get')
-            return False
+                test = True; 
+            except:
+                pass; 
+             
+        if (not test):
+            print('USB no get')           
         else: 
             print ('USB get')
-            return True
+        return test
     
     def USB_close(self):
         try:
@@ -109,10 +129,6 @@ class USB_dev_io:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
             bytes_data = bytearray(data)
             
-            if (self.interface_num != 0):
-                bytes_data[2] = (self.interface_num + 1)
-            
-            #self.dev.set_nonblocking(1)
             bytes_written = self.dev.write(bytes_data)
             if bytes_written >= len(bytes_data):
                 return 1
@@ -145,12 +161,10 @@ class USB_dev_io:
 class UART_dev_io:
 
     dev = None
-    interface_num = 1
     COM_PORT = "COM1"
     
     def _init_(self):
         self.dev = None
-        self.interface_num = 1
         
     def UART_init(self):
         self.dev = None
@@ -240,6 +254,7 @@ def main():
     m_io_handle_t.dev_open = False;
     m_io_handle_t.bResendFlag = False;
     m_io_handle_t.m_uCmdIndex = 1;
+    m_io_handle_t.m_intf = 1;
     m_io_handle_t.m_usCheckSum = 0;
     m_io_handle_t.ac_buffer = (c_ubyte*65)()
 
@@ -268,20 +283,18 @@ def main():
     args = parser.parse_args()
     
     if args.option:
-        option = get_option(args.option[0])
-        #print(option)
+        m_io_handle_t.m_intf = get_option(args.option[0]) + 1;
     else:
-        option = 0
+        m_io_handle_t.m_intf = 1
         
     # do open & connect
-    if (option != 1):
+    if (m_io_handle_t.m_intf != 2):
         m_DEV_IO.init = VOIDFUNCTYPE(m_USB_dev_io.USB_init)
         m_DEV_IO.open = UINTFUNCTYPE(m_USB_dev_io.USB_open)
         m_DEV_IO.close = VOIDFUNCTYPE(m_USB_dev_io.USB_close)
         m_DEV_IO.read = RWFUNCTYPE(m_USB_dev_io.USB_read)
         m_DEV_IO.write = RWFUNCTYPE(m_USB_dev_io.USB_write)
-        if (option != 0):
-            m_USB_dev_io.interface_num = option
+
     else:
         m_DEV_IO.init = VOIDFUNCTYPE(m_UART_dev_io.UART_init)
         m_DEV_IO.open = UINTFUNCTYPE(m_UART_dev_io.UART_open)

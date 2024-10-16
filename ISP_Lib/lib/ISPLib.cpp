@@ -11,7 +11,6 @@ unsigned short Checksum(unsigned char* buf, unsigned int len)
 	{
 		c += buf[i];
 	}
-
 	return (c);
 }
 
@@ -48,6 +47,7 @@ unsigned int ISP_Read(io_handle_t* handle, unsigned char* pcBuffer, unsigned int
 		if (handle->dev_open == FALSE) {
 			return FALSE;
 		}
+		memset(handle->ac_buffer, 0, sizeof(handle->ac_buffer));
 		dwLength = handle->m_dev_io.read(dwMilliseconds, handle->ac_buffer);
 		if (!dwLength) {
 			return FALSE;
@@ -55,7 +55,6 @@ unsigned int ISP_Read(io_handle_t* handle, unsigned char* pcBuffer, unsigned int
 
 		usCheckSum = *((unsigned short*)&(handle->ac_buffer[1]));
 		uCmdIndex = *((unsigned long*)&(handle->ac_buffer[5]));
-
 		if (dwLength >= 8 && (!bCheckIndex || uCmdIndex == handle->m_uCmdIndex - 1) && usCheckSum == handle->m_usCheckSum) {
 			if (szMaxLen > dwLength - 8) {
 				szMaxLen = dwLength - 8;
@@ -70,7 +69,7 @@ unsigned int ISP_Read(io_handle_t* handle, unsigned char* pcBuffer, unsigned int
 			break;
 		}
 	}
-	return TRUE;
+	return FALSE;
 }
 
 unsigned int ISP_Write(io_handle_t* handle, unsigned int uCmd, unsigned char* pcBuffer, unsigned int dwLen, unsigned int dwMilliseconds) {
@@ -93,6 +92,10 @@ unsigned int ISP_Write(io_handle_t* handle, unsigned int uCmd, unsigned char* pc
 		memcpy((unsigned char*)(&(handle->ac_buffer[9])), pcBuffer, dwCmdLength);
 	}
 	handle->m_usCheckSum = Checksum(&(handle->ac_buffer[1]), sizeof(handle->ac_buffer) - 1);
+
+	if (handle->m_intf > 2) {
+		*(&(handle->ac_buffer[2])) = static_cast<char>(handle->m_intf);
+	}
 	bRet = handle->m_dev_io.write(dwMilliseconds, handle->ac_buffer);
 	if (bRet != FALSE) {
 		handle->m_uCmdIndex += 2;

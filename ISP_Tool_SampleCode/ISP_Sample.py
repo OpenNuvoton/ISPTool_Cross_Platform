@@ -47,6 +47,7 @@ class io_handle_t(Structure):
         ("bResendFlag", c_uint),
         ("m_usCheckSum",c_ubyte),
         ("m_uCmdIndex",c_uint),
+        ("m_intf",c_uint),
         ("ac_buffer",c_ubyte * 65),
         ("dev_io",POINTER(c_void_p)),
         ("m_dev_io",DEV_IO),
@@ -56,61 +57,80 @@ class io_handle_t(Structure):
 class USB_dev_io:
 
     dev = None
-    interface_num = 0
     
     def _init_(self):
         self.dev = None
-        self.interface_num = 0
     
     def USB_init(self):
         self.dev = hid.device()
     
     def USB_open(self):
-        test = 0;
+        test = False;
         if self.dev == None:
             self.dev = hid.device()
             
         try:
             self.dev.open(0x0416, 0x3F00)
-        except Exception as e:
-            test = 1
+            test = True;
+        except:
+            pass;
             
-        if (test > 0):
+        if (not test):
             try:
                 self.dev.open(0x0416, 0xA316)
-            except Exception as e:
-                test = 2
+                test = True;
+            except:
+                pass;
         
-        if (test > 1):
+        if (not test):
             try:
-                self.dev.open(0x0416, 0x5201)
-            except Exception as e:
-                test = 3
+                for device_info in hid.enumerate(0x0416, 0x5201): 
+                    if device_info['interface_number'] == 5:
+                        self.dev.open_path(device_info['path'])
+                        test = True;
+            except:
+                pass;
                 
-        if (test > 2):
+        if (not test):
             try:
-                self.dev.open(0x0416, 0x5203)
-            except Exception as e:
-                test = 4
+                for device_info in hid.enumerate(0x0416, 0x5203):  
+                    if device_info['interface_number'] == 5:
+                        self.dev.open_path(device_info['path']) 
+                        test = True;                       
+            except:
+                pass;
                 
-        if (test > 3):
+        if (not test):
             try:
-                self.dev.open(0x0416, 0x2006)
-            except Exception as e:
-                test = 5
+                for device_info in hid.enumerate(0x0416, 0x2006):  
+                    if device_info['interface_number'] == 4:
+                        self.dev.open_path(device_info['path']) 
+                        test = True;                         
+            except:
+                pass;
                 
-        if (test > 4):
+        if (not test):
+            try:
+                #self.dev.open(0x0416, 0x2006)
+                for device_info in hid.enumerate(0x0416, 0x2009):  
+                    if device_info['interface_number'] == 4:
+                        self.dev.open_path(device_info['path']) 
+                        test = True;                       
+            except:
+                pass;
+                
+        if (not test):
             try:
                 self.dev.open(0x0416, 0x3F10)
-            except Exception as e:
-                test = 6
-            
-        if (test > 5):
-            print('USB no get')
-            return False
+                test = True; 
+            except:
+                pass; 
+             
+        if (not test):
+            print('USB no get')           
         else: 
             print ('USB get')
-            return True
+        return test    
     
     def USB_close(self):
         try:
@@ -125,14 +145,10 @@ class USB_dev_io:
             traceback.print_exc()
             
     def USB_write(self, Ctime, buffer):
-        try:
+        try:        
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
             bytes_data = bytearray(data)
             
-            if (self.interface_num != 0):
-                bytes_data[2] = (self.interface_num + 1)
-            
-            #self.dev.set_nonblocking(1)
             bytes_written = self.dev.write(bytes_data)
             if bytes_written >= len(bytes_data):
                 return 1
@@ -165,12 +181,10 @@ class USB_dev_io:
 class UART_dev_io:
 
     dev = None
-    interface_num = 1
     COM_PORT = "COM1"
     
     def _init_(self):
         self.dev = None
-        self.interface_num = 1
         
     def UART_init(self):
         self.dev = None
@@ -272,6 +286,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         self.io_handle_t.dev_open = False;
         self.io_handle_t.bResendFlag = False;
         self.io_handle_t.m_uCmdIndex = 1;
+        self.io_handle_t.m_intf = 1;
         self.io_handle_t.m_usCheckSum = 0;
         self.io_handle_t.ac_buffer = (c_ubyte*65)()
 
@@ -343,15 +358,15 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def Ui_open(self):
         prev = self.connect_flag
+        self.io_handle_t.m_intf = self.comboBox_interface.currentIndex() + 1;     
         self.isUART = True if (self.comboBox_interface.currentIndex()== 1) else False
-        if not self.isUART:
-            self.USB_dev_io.interface_num = self.comboBox_interface.currentIndex()            
+        if not self.isUART:                 
             self.isCAN = True if (self.comboBox_interface.currentIndex()== 5) else False
         else:
             self.UART_dev_io.COM_PORT = str(self.comboBox_port.currentText())
             
         self.DEV_IO_setting()
-        
+     
         self.lib.ISP_Open.argtypes = [POINTER(io_handle_t)]
         self.lib.ISP_Open.restype = c_uint
         
@@ -407,8 +422,8 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.io_handle_t.m_uCmdIndex = 1
                 if self.lib.ISP_Connect(byref(self.io_handle_t), 40):
                     if self.isUART:    
-                        self.UART_dev_io.dev.timeout = 2
-                    self.lib.ISP_SyncPackNo(byref(self.io_handle_t));
+                        self.UART_dev_io.dev.timeout = 2                   
+                    self.lib.ISP_SyncPackNo(byref(self.io_handle_t));                   
                     self.m_ucFW_VER = self.lib.ISP_GetVersion(byref(self.io_handle_t));
                     self.m_ulDeviceID = self.lib.ISP_GetDeviceID(byref(self.io_handle_t));
                     self.lib.ISP_ReadConfig(byref(self.io_handle_t), byref(self.config));
@@ -556,9 +571,9 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         ctp = self.chip_type 
         
         #debug
-        ctp = PROJ_M2L31
-        self.memory_size = 512 * 1024
-        self.page_size = 4 * 1024
+        #ctp = PROJ_M2L31
+        #self.memory_size = 512 * 1024
+        #self.page_size = 4 * 1024
         
         if config_setting_str(ctp) == "":
             import ui.config_type_0 as UI  
@@ -735,7 +750,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication(sys.argv)
     # tool icon
-    app.setWindowIcon(QtGui.QIcon(':/image/app.ico'))
+    app.setWindowIcon(QtGui.QIcon('./image/NuTool.ico'))
     myapp = Main_Ui()
     myapp.show()
     sys.exit(app.exec_())
