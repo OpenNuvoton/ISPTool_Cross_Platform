@@ -1,12 +1,14 @@
 #include "isplib.h"
-#include "isplib_uart.h"
 #include "stdio.h"
 #include "NuMicro.h"
 #include "stdint.h"
 
+#ifdef ISP_UART
+
+#include "isplib_func.h"
 io_handle_t handle_io;
 
-__align(4) uint8_t  uart_rcvbuf[64];
+uint8_t  uart_rcvbuf[64];
 uint8_t volatile bUartDataReady;
 uint8_t volatile bufhead;
 #define MAX_PKT_SIZE            (64)
@@ -94,10 +96,8 @@ void m_dev_io_close() {
 unsigned int m_dev_io_read(unsigned int dwMilliseconds, unsigned char* pcBuffer) {
     BUSY = 0;
     uint8_t i;
-    uint8_t *pRxData;
     unsigned int rxlen = 64;
     unsigned int readlen = 0;
-    pRxData = (uint8_t *)pcBuffer;
 
     if (AUTO_DETECT_VALUE == 0)
     {
@@ -120,7 +120,7 @@ unsigned int m_dev_io_read(unsigned int dwMilliseconds, unsigned char* pcBuffer)
     }
     for (i = 0; i < rxlen; i++)
     {
-        pRxData[i+1] = uart_rcvbuf[i];
+        pcBuffer[i+1] = uart_rcvbuf[i];
         readlen ++;
     }
 
@@ -132,3 +132,5 @@ unsigned int m_dev_io_write(unsigned int dwMilliseconds, unsigned char* pcBuffer
     UART_WriteMultiBytes((uint8_t *)pcBuffer);
     return 1;
 }
+
+#endif

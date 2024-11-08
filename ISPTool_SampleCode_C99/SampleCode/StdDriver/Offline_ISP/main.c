@@ -90,7 +90,6 @@ void SYS_Init(void)
     CLK_SetModuleClock(TMR0_MODULE, CLK_CLKSEL1_TMR0SEL_HXT, 0);
     /* User can use SystemCoreClockUpdate() to calculate PllClock, SystemCoreClock and CycylesPerUs automatically. */
 
-
     CLK_EnableModuleClock(USBH_MODULE);
 
     /* USB Host desired input clock is 48 MHz. Set as PLL divided by 4 (192/4 = 48) */
@@ -164,10 +163,19 @@ int32_t main(void)
             button_start = 0; //clear button
             NVIC_DisableIRQ(USBD20_IRQn);
             NVIC_DisableIRQ(GPC_IRQn);
+					
+						// store write data into Nu-Link2-Pro data flash
+						// change DATA_FLASH_TEST_BASE base on dataflash address.
             int DATA_FLASH_TEST_BASE  = 0x30000;
+						// change WRITE_DATA_SIZE base on write data byte size.
+						int WRITE_DATA_SIZE = 1024;
 
-            DO_ISP(DATA_FLASH_TEST_BASE, 0, 1024);
-
+						PASS = 1;
+					
+            DO_ISP(DATA_FLASH_TEST_BASE, 0, WRITE_DATA_SIZE);
+						
+						PASS = 0;
+					
             NVIC_EnableIRQ(USBD20_IRQn);
             NVIC_EnableIRQ(GPC_IRQn);
         }

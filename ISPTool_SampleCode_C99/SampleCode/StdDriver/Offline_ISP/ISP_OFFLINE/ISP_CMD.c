@@ -5,9 +5,9 @@
 #include "ISPLib.h"
 
 #define PACKET_SIZE 64
-__align(4) uint8_t rcvbuf[PACKET_SIZE];
-__align(4) uint8_t sendbuf[PACKET_SIZE];
-__align(4) uint8_t file_buffer[512];
+uint8_t rcvbuf[PACKET_SIZE];
+uint8_t sendbuf[PACKET_SIZE];
+uint8_t file_buffer[512];
 
 unsigned short gcksum;
 extern  unsigned int AP_file_totallen;
@@ -114,7 +114,7 @@ ErrNo UpdatedTargetFalsh(uint32_t data_addr, uint32_t in_startaddr, uint32_t in_
     for (unsigned long i = 0; i < AP_file_totallen;) {
         unsigned long uLen;
         unsigned int uRetry = 10;
-        fill_file_buffer(data_addr + i, 48);
+        fill_file_buffer(data_addr + i, 56);
         while (uRetry) {
             ISP_UpdateAPROM(&handle_io, in_startaddr, AP_file_totallen, in_startaddr + i, (unsigned char*)file_buffer, (unsigned int*)&uLen);
 

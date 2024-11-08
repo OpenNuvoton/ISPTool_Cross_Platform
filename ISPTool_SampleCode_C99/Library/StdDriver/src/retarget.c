@@ -341,7 +341,7 @@ SH_End
  */
 void HardFault_Handler(void)
 {
-    asm("MOVS    r0, #4                        \n"
+    __asm("MOVS    r0, #4                        \n"
         "MOV     r1, LR                        \n"
         "TST     r0, r1                        \n" /*; check LR bit 2 */
         "BEQ     1f                            \n" /*; stack use MSP */

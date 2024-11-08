@@ -4,7 +4,7 @@
 #include "Voltage.h"
 #include <string.h>
 #include "isplib.h"
-#include "isplib_uart.h"
+#include "isplib_func.h"
 
 extern void CmdRunAPROM(void);
 extern void CmdRunLDROM(void);
@@ -105,7 +105,14 @@ int ISP_CmdJumpLDROM()
 
 void DO_ISP(int data_address, int start_address, int program_size){
     ISP_INTERFACE_INIT();
+	
+//#if defined(ISP_UART) || defined(ISP_RS485)
     ISP_AUTO_DETECT();
+#if defined(ISP_SPI)
+		CLK_SysTickDelay(10000);
+#endif
+//#endif
+	
     ISP_PROGRAM(data_address, start_address, program_size);
 }
 

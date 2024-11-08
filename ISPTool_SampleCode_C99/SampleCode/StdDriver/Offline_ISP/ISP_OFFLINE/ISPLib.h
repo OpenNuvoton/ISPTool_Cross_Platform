@@ -1,3 +1,10 @@
+//select the interface 
+
+#define ISP_UART
+//#define ISP_I2C
+//#define ISP_SPI
+//#define ISP_RS485
+//#define ISP_CAN
 
 #define CMD_GET_VERSION     	0x000000A6
 #define CMD_UPDATE_APROM		0x000000A0
@@ -82,6 +89,12 @@ DLL_EXPORT  unsigned int ISP_GetDeviceID(io_handle_t* handle);
 
 DLL_EXPORT  unsigned int ISP_EraseSPI(io_handle_t* handle, unsigned int offset, unsigned int total_len);
 DLL_EXPORT  unsigned int ISP_UpdateSPI(io_handle_t* handle, unsigned int start_addr, unsigned int total_len, const char* buffer);
+
+DLL_EXPORT  unsigned int ISP_CAN_Write(io_handle_t* handle, unsigned int uCmd, unsigned int uData, unsigned int dwMilliseconds);
+DLL_EXPORT  unsigned int ISP_CAN_Read(io_handle_t* handle, unsigned int dwMilliseconds);
+DLL_EXPORT  void ISP_CAN_UpdateConfig(io_handle_t* handle, unsigned int config[], unsigned int response[], unsigned char offset);
+DLL_EXPORT  void ISP_CAN_ReadConfig(io_handle_t* handle, unsigned int config[], unsigned char offset);
+
 #ifdef __cplusplus
 }
 #endif
