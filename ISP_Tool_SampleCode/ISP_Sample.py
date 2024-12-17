@@ -7,8 +7,8 @@
 # required by the LGPL.
 #
 # PySide6 is licensed under the LGPL, and this program adheres to
-# the conditions and obligations of that license.import ctypes
-
+# the conditions and obligations of that license.
+import ctypes
 import os
 import serial
 import sys 
@@ -52,7 +52,6 @@ class io_handle_t(Structure):
         ("dev_io",POINTER(c_void_p)),
         ("m_dev_io",DEV_IO),
     ]
-
 
 class USB_dev_io:
 
@@ -130,7 +129,7 @@ class USB_dev_io:
             print('USB no get')           
         else: 
             print ('USB get')
-        return test    
+        return test
     
     def USB_close(self):
         try:
@@ -145,7 +144,7 @@ class USB_dev_io:
             traceback.print_exc()
             
     def USB_write(self, Ctime, buffer):
-        try:        
+        try:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
             bytes_data = bytearray(data)
             
@@ -190,7 +189,7 @@ class UART_dev_io:
         self.dev = None
     
     def UART_open(self):
-        try:  
+        try:
             if self.dev != None:
                 self.dev.close()
                 
@@ -257,14 +256,6 @@ class UART_dev_io:
             traceback.print_exc()
             return 0
 
-class Worker(QObject):
-    finished = Signal()
-    error = Signal(str)
-    
-    def __init__(self, ui):
-        super().__init__()
-        self.ui = ui
-
 class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self) # Call the inherited classes __init__ method
@@ -276,8 +267,6 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         self.progressBar.setValue(0)
         
         self.connect_flag = False
-        self.isCAN = False
-        self.isUART = False
         
         self.btn_APROM.clicked.connect(self.iniBrowseAPROM)
         self.btn_DataFlash.clicked.connect(self.iniBrowseDataFlash)
@@ -308,9 +297,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         self.wconfig = (c_uint * 14)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
                                     0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
                                     0xFFFFFFFF,0xFFFFFFFF)
-        
-        #self.jconfig = (c_uint * 8)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF)
-        
+              
         self.m_ulDeviceID = 0x0
         self.chip_type = 0x0
         self.memory_size = 0
@@ -341,7 +328,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             self.comboBox_port.setEnabled(False)
         
     def DEV_IO_setting(self):
-        if (not self.isUART):
+        if (self.io_handle_t.m_intf != 2):
             self.DEV_IO.init = VOIDFUNCTYPE(self.USB_dev_io.USB_init)
             self.DEV_IO.open = UINTFUNCTYPE(self.USB_dev_io.USB_open)
             self.DEV_IO.close = VOIDFUNCTYPE(self.USB_dev_io.USB_close)
@@ -359,17 +346,13 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
     def Ui_open(self):
         prev = self.connect_flag
         self.io_handle_t.m_intf = self.comboBox_interface.currentIndex() + 1;     
-        self.isUART = True if (self.comboBox_interface.currentIndex()== 1) else False
-        if not self.isUART:                 
-            self.isCAN = True if (self.comboBox_interface.currentIndex()== 5) else False
-        else:
+        if self.io_handle_t.m_intf == 2:
             self.UART_dev_io.COM_PORT = str(self.comboBox_port.currentText())
             
         self.DEV_IO_setting()
      
         self.lib.ISP_Open.argtypes = [POINTER(io_handle_t)]
-        self.lib.ISP_Open.restype = c_uint
-        
+        self.lib.ISP_Open.restype = c_uint        
         
         ct = False
 
@@ -389,19 +372,17 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lib.ISP_Close(byref(self.io_handle_t))
             self.label_Connection.setText("Status: Disconnected")
             self.comboBox_interface.setEnabled(True)
-            self.btn_Connect.setText("Connect")
-        elif (self.isCAN):
-            ct = self.attempt_connection("CAN")
+            self.btn_Connect.setText("Connect")           
         else:
-            ct = self.attempt_connection("")
+            ct = self.attempt_connection()
             
         if (not ct and not prev):
             self.update_disconnected_status()
     
-    def attempt_connection(self, flag):
+    def attempt_connection(self):
         t = 0
         r = 0
-        if flag == "CAN":
+        if self.io_handle_t.m_intf == 6:
             for attempt in range(0, 50):
                 if self.lib.ISP_CAN_Connect(byref(self.io_handle_t), 4000):       
                     self.m_ulDeviceID = self.lib.ISP_CAN_GetDeviceID(byref(self.io_handle_t));
@@ -416,12 +397,12 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                     return True                    
             return False
         else:
-            if self.isUART:
+            if self.io_handle_t.m_intf == 2:
                 self.UART_dev_io.dev.timeout = 0.04
             for attempt in range(0, 250):
                 self.io_handle_t.m_uCmdIndex = 1
                 if self.lib.ISP_Connect(byref(self.io_handle_t), 40):
-                    if self.isUART:    
+                    if self.io_handle_t.m_intf == 2:    
                         self.UART_dev_io.dev.timeout = 2                   
                     self.lib.ISP_SyncPackNo(byref(self.io_handle_t));                   
                     self.m_ucFW_VER = self.lib.ISP_GetVersion(byref(self.io_handle_t));
@@ -477,7 +458,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 while (i < self.APROM_size):
                     update_len = c_uint(0)
                     buffer = ctypes.cast(ctypes.addressof(array_pointer.contents) + i, POINTER(c_ubyte))
-                    if (not self.isCAN):
+                    if (self.io_handle_t.m_intf != 6):
                         self.lib.ISP_UpdateAPROM(byref(self.io_handle_t), start_addr, self.APROM_size, start_addr + i, buffer, byref(update_len))
                     else:
                         self.lib.ISP_CAN_UpdateAPROM(byref(self.io_handle_t), start_addr, self.APROM_size, start_addr + i, buffer, byref(update_len))
@@ -517,7 +498,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 while (i < self.DataFlash_size):
                     update_len = c_uint(0)
                     buffer = ctypes.cast(ctypes.addressof(array_pointer.contents) + i, POINTER(c_ubyte))
-                    if (not self.isCAN):
+                    if (self.io_handle_t.m_intf != 6):
                         self.lib.ISP_UpdateDataFlash(byref(self.io_handle_t), start_addr, self.DataFlash_size, start_addr + i, buffer, byref(update_len))
                     else:
                         self.lib.ISP_CAN_UpdateDataFlash(byref(self.io_handle_t), start_addr, self.DataFlash_size, start_addr + i, buffer, byref(update_len))
@@ -533,7 +514,7 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 reply = QtWidgets.QMessageBox.warning(None, 'message box', 'Update Data Flash finish')
                 
             elif self.radioButton_Config.isChecked():
-                if (not self.isCAN):
+                if (self.io_handle_t.m_intf != 6):
                     self.lib.ISP_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config)
                     self.lib.ISP_ReadConfig(pointer(self.io_handle_t), self.config)
                 else:
@@ -542,6 +523,9 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.lib.ISP_CAN_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config, offset)
                     self.lib.ISP_CAN_ReadConfig(pointer(self.io_handle_t), self.config, offset)
         
+            if self.checkBox_jump.isChecked():
+                self.lib.ISP_RunAPROM(pointer(m_io_handle_t))
+                
         self.update_flash()
             
     def Ui_erase(self):
@@ -714,6 +698,10 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             import ui.config_type_M2003 as UI   
             self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())  
             self.configwindow.config_type_M2003_setup()
+        elif config_setting_str(ctp) == "M55M1":
+            import ui.config_type_M55M1 as UI   
+            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())  
+            self.configwindow.config_type_M55M1_setup()
             
         self.configwindow.show()
         

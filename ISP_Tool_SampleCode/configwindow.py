@@ -135,6 +135,22 @@ class ConfigDialog(QDialog):
         self.ui.lineEdit_data_address.setReadOnly(True)
         self.ui.checkBox_dataflash.setChecked(self.getBits(0, 0, 1, 0))
         
+    def secure_conceal_pagesize_only_template(self):    
+        self.ui.checkBox_secure_conceal.stateChanged.connect(lambda: (self.updateValue((0x55AA5AA5 if self.ui.checkBox_secure_conceal.isChecked() else 0xFFFFFFFF), 6),
+                                                                 self.ui.lineEdit_baddress.setText(f'{(int((self.size - self.page_size) * 1024) if self.ui.checkBox_secure_conceal.isChecked() else 0xFFFFFFFF):08X}'),
+                                                                 self.ui.lineEdit_pcount.setText(f'{(1 if self.ui.checkBox_secure_conceal.isChecked() else 0)}'),
+                                                                 self.ui.lineEdit_baddress.setEnabled(self.ui.checkBox_secure_conceal.isChecked()),
+                                                                 self.ui.lineEdit_pcount.setEnabled(self.ui.checkBox_secure_conceal.isChecked()))),
+                                                                 
+        self.ui.lineEdit_baddress.setEnabled(self.ui.checkBox_secure_conceal.isChecked())
+        self.ui.lineEdit_pcount.setEnabled(self.ui.checkBox_secure_conceal.isChecked())
+        self.ui.lineEdit_baddress.editingFinished.connect(lambda: ( self.ui.lineEdit_baddress.setText(f'{(int(self.ui.lineEdit_baddress.text(), 16) & 0xFFFFF000):08X}'),
+                                                                 self.updateValue((int(self.ui.lineEdit_baddress.text(),16) & 0xFFFFF000), 4),
+                                                                 self.ui.lineEdit_pcount.setText(f'{int(self.ui.lineEdit_pcount.text()) if int(self.ui.lineEdit_pcount.text())<= ((self.size - int(self.ui.lineEdit_baddress.text(), 16)/1024))/self.page_size else int((self.size - int(self.ui.lineEdit_baddress.text(), 16)/1024)/self.page_size)}'),
+                                                                 self.updateValue(int(self.ui.lineEdit_pcount.text()), 5)))
+        self.ui.lineEdit_pcount.editingFinished.connect(lambda: ( self.ui.lineEdit_pcount.setText(f'{int(self.ui.lineEdit_pcount.text())if int(self.ui.lineEdit_pcount.text())<= (self.size - int(self.ui.lineEdit_baddress.text(), 16)/1024)/self.page_size else int((self.size - int(self.ui.lineEdit_baddress.text(), 16)/1024)/self.page_size)}'),
+                                                               self.updateValue(int(self.ui.lineEdit_pcount.text()), 5)))
+                                                               
     def secure_conceal_pagesize_template(self):
         self.ui.checkBox_dataflash.stateChanged.connect(lambda: (self.checkBit(not self.ui.checkBox_dataflash.isChecked(), 0, 0),
                                                                  self.ui.doubleSpinBox_pagesize.setEnabled(self.ui.checkBox_dataflash.isChecked()),
@@ -206,6 +222,14 @@ class ConfigDialog(QDialog):
         self.ui.checkBox_watchdog_pwdwn.stateChanged.connect(lambda: self.checkBit(not self.ui.checkBox_watchdog_pwdwn.isChecked(), 30, 0))
         self.ui.checkBox_watchdog.setChecked(self.getBits(31, 0, 1, 0))
         self.ui.checkBox_watchdog_pwdwn.setChecked(self.getBits(30, 0, 1, 0) and self.ui.checkBox_watchdog.isChecked())
+    
+    def update_region_address(self):
+        raddr = int(self.ui.lineEdit_n_region_addr.text(), 16) & 0x7FFFFFFF
+        raddr = int(raddr / 0x2000) * 0x2000
+        raddr = raddr if raddr < 0x2FE000 else 0x2FE000
+        raddr = raddr if raddr > 0x102000 else 0x102000
+        self.ui.lineEdit_n_region_addr.setText(f'{raddr:08X}')
+        self.updateValue(raddr, 12)
             
     def config_type_M051A_setup(self):
         self.ui.radioButton_bw_v_0.setText("4.5V")
@@ -918,6 +942,64 @@ class ConfigDialog(QDialog):
         self.ui.checkBox_security_lock.setChecked(self.getBits(1, 0, 1, 0))
         
         self.checkBox_ice_lock_template(12)
+        
+    def config_type_M55M1_setup(self):
+        self.radioButton_bt_template_2()
+        self.radioButton_bw_template_8(21)
+        self.checkBox_bw_0_template(19)
+        self.checkBox_bw_1_template(20)
+        self.ui.radioButton_wdt_0.clicked.connect(lambda: (self.updateBits(31, 1, 1, 0),
+                                                           self.updateBits(3, 3, 2, 0)))
+        self.ui.radioButton_wdt_1.clicked.connect(lambda: (self.updateBits(31, 0, 1, 0),
+                                                           self.updateBits(3, 0, 2, 0)))
+        self.ui.radioButton_wdt_0.setChecked(self.getBits(31, 1, 1, 0))
+        self.ui.radioButton_wdt_1.setChecked(self.getBits(31, 0, 1, 0) and self.getBits(3, 0, 2, 0))
+        self.ui.checkBox_isp_uart.stateChanged.connect(lambda: self.checkBit(self.ui.checkBox_isp_uart.isChecked(), 8, 3))                                                        
+        self.ui.checkBox_isp_uart.setChecked(self.getBits(8, 1, 1, 3))
+        self.ui.checkBox_isp_usb.stateChanged.connect(lambda: self.checkBit(not self.ui.checkBox_isp_usb.isChecked(), 9, 3))                                                        
+        self.ui.checkBox_isp_usb.setChecked(self.getBits(9, 0, 1, 3))
+        self.ui.checkBox_isp_can.stateChanged.connect(lambda: self.checkBit(self.ui.checkBox_isp_can.isChecked(), 10, 3))                                                        
+        self.ui.checkBox_isp_can.setChecked(self.getBits(10, 1, 1, 3))
+        self.ui.checkBox_isp_i2c.stateChanged.connect(lambda: self.checkBit(self.ui.checkBox_isp_i2c.isChecked(), 11, 3))                                                        
+        self.ui.checkBox_isp_i2c.setChecked(self.getBits(11, 1, 1, 3))
+        self.ui.checkBox_isp_spi.stateChanged.connect(lambda: self.checkBit(self.ui.checkBox_isp_spi.isChecked(), 12, 3))                                                        
+        self.ui.checkBox_isp_spi.setChecked(self.getBits(12, 1, 1, 3))
+        self.ui.radioButton_mf_0.clicked.connect(lambda: self.updateBits(0, 0, 2, 3))
+        self.ui.radioButton_mf_1.clicked.connect(lambda: self.updateBits(0, 1, 2, 3))
+        self.ui.radioButton_mf_2.clicked.connect(lambda: self.updateBits(0, 2, 2, 3))
+        self.ui.radioButton_mf_3.clicked.connect(lambda: self.updateBits(0, 3, 2, 3))
+        self.ui.radioButton_mf_0.setChecked(self.getBits(0, 0, 2, 3))
+        self.ui.radioButton_mf_1.setChecked(self.getBits(0, 1, 2, 3)) 
+        self.ui.radioButton_mf_2.setChecked(self.getBits(0, 2, 2, 3))
+        self.ui.radioButton_mf_3.setChecked(self.getBits(0, 3, 2, 3))
+        self.secure_conceal_pagesize_only_template()
+        self.ui.checkBox_mirror_boundary.stateChanged.connect(lambda: self.checkBit(self.ui.checkBox_mirror_boundary.isChecked(), 31, 12))
+        self.ui.checkBox_mirror_boundary.setChecked(self.getBits(31, 1, 1, 12))
+        self.ui.checkBox_n_region_lock.setChecked(not self.getBits(0, 0x7FFFFFFF, 31, 12))
+        self.ui.checkBox_n_region_lock.stateChanged.connect(lambda: self.ui.lineEdit_n_region_addr.setEnabled(self.ui.checkBox_n_region_lock.isChecked())) 
+        self.ui.lineEdit_n_region_addr.setEnabled(self.ui.checkBox_n_region_lock.isChecked())
+        self.ui.lineEdit_n_region_addr.editingFinished.connect(self.update_region_address)
+        self.check_secure_region()
+        self.checkBox_ice_lock_template(11)
+        self.ui.radioButton_lv0.clicked.connect(lambda: (self.updateBits(0, 0xFFFFFFFF, 32, 10),
+                                                         self.ui.radioButton_pin0.setChecked(True),
+                                                         self.ui.GroupBox_pin.setEnabled(False)))
+        self.ui.radioButton_lv1.clicked.connect(lambda: (self.updateBits(0, 0x005A, 16, 10),
+                                                         self.ui.radioButton_pin0.setChecked(True),
+                                                         self.ui.GroupBox_pin.setEnabled(False)))
+        self.ui.radioButton_lv2.clicked.connect(lambda: (self.updateBits(0, 0x335A, 16, 10),
+                                                         self.ui.radioButton_pin0.setChecked(True),
+                                                         self.ui.GroupBox_pin.setEnabled(True)))
+        self.ui.radioButton_lv3.clicked.connect(lambda: (self.updateBits(0, 0x995A, 16, 10),
+                                                         self.ui.radioButton_pin0.setChecked(True),
+                                                         self.ui.GroupBox_pin.setEnabled(True)))
+        self.ui.radioButton_pin0.clicked.connect(lambda: self.updateBits(0, 0xA, 4, 10))
+        self.ui.radioButton_pin1.clicked.connect(lambda: self.updateBits(0, 0xB, 4, 10))
+        self.ui.radioButton_pin2.clicked.connect(lambda: self.updateBits(0, 0xC, 4, 10))
+        self.ui.radioButton_pin3.clicked.connect(lambda: self.updateBits(0, 0xD, 4, 10))
+        self.ui.radioButton_lv0.setChecked(True)
+        self.ui.radioButton_pin0.setChecked(True)
+        
         
     def valid_setting(self):
         reg_key8 = QRegularExpressionValidator(QRegularExpression("[0-9A-Fa-f]{1,8}"))

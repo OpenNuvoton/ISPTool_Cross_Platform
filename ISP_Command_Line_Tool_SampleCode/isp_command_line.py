@@ -149,7 +149,7 @@ class USB_dev_io:
             buffer_as_bytes = (c_ubyte * (len(return_str)+1))()
             buffer_as_bytes[1:] = return_str
             memmove(buffer, buffer_as_bytes, len(buffer_as_bytes))
-            
+
             return len(buffer_as_bytes) - 1
             
         except Exception as e:
@@ -170,7 +170,7 @@ class UART_dev_io:
         self.dev = None
     
     def UART_open(self):
-        try: 
+        try:
             if self.dev != None:
                 self.dev.close()
                 
@@ -225,7 +225,7 @@ class UART_dev_io:
                 buffer_as_bytes[1:] = return_str
             
             memmove(buffer, buffer_as_bytes, len(buffer_as_bytes))  
-            
+
             if len(return_str) >= 4:
                 return len(return_str)
             else:
@@ -275,6 +275,8 @@ def main():
     group.add_argument("-d", "--dataflash", nargs='+', help="Update Data Flash")
     group.add_argument("-c", "--config", nargs='+', help="Update Config Value")
     group.add_argument("-e", "--erase", action='store_true', help="Erase All")
+    
+    parser.add_argument("-j", "--jump", action='store_true', help="Jump to APROM")
     
     if len(sys.argv) == 1:
         parser.print_help()
@@ -463,8 +465,13 @@ def main():
     elif args.erase:
         m_lib.ISP_EraseAll(pointer(m_io_handle_t))
         print("Erase Flash finish \n")
-            
+    
+    if args.jump:
+        m_lib.ISP_RunAPROM(pointer(m_io_handle_t))
+        print("Jump to APROM \n")
+    
     m_lib.ISP_Close(byref(m_io_handle_t))
 
 if __name__ == "__main__":
+    print("Arguments:", sys.argv)
     main()

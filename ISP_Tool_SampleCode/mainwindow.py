@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QGroupBox,
-    QHBoxLayout, QLabel, QLineEdit, QMainWindow,
-    QMenuBar, QProgressBar, QPushButton, QRadioButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
+    QGroupBox, QHBoxLayout, QLabel, QLineEdit,
+    QMainWindow, QMenuBar, QProgressBar, QPushButton,
+    QRadioButton, QSizePolicy, QSpacerItem, QStatusBar,
+    QVBoxLayout, QWidget)
 import nuvoton_rc
 
 class Ui_MainWindow(object):
@@ -242,6 +242,22 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addLayout(self.horizontalLayout_9)
 
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.label_7 = QLabel(self.verticalGroupBox_2)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setIndent(4)
+
+        self.horizontalLayout_6.addWidget(self.label_7)
+
+        self.checkBox_jump = QCheckBox(self.verticalGroupBox_2)
+        self.checkBox_jump.setObjectName(u"checkBox_jump")
+
+        self.horizontalLayout_6.addWidget(self.checkBox_jump)
+
+
+        self.verticalLayout_5.addLayout(self.horizontalLayout_6)
+
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -271,6 +287,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.setStretch(0, 1)
         self.verticalLayout_5.setStretch(1, 1)
+        self.verticalLayout_5.setStretch(2, 1)
 
         self.verticalLayout.addWidget(self.verticalGroupBox_2)
 
@@ -303,7 +320,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.setStretch(0, 2)
         self.verticalLayout.setStretch(1, 2)
         self.verticalLayout.setStretch(2, 6)
-        self.verticalLayout.setStretch(3, 2)
+        self.verticalLayout.setStretch(3, 4)
         self.verticalLayout.setStretch(4, 1)
 
         self.verticalLayout_3.addLayout(self.verticalLayout)
@@ -355,6 +372,8 @@ class Ui_MainWindow(object):
         self.radioButton_APROM.setText(QCoreApplication.translate("MainWindow", u"APROM", None))
         self.radioButton_DataFlash.setText(QCoreApplication.translate("MainWindow", u"Data Flash", None))
         self.radioButton_Config.setText(QCoreApplication.translate("MainWindow", u"Config", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Option", None))
+        self.checkBox_jump.setText(QCoreApplication.translate("MainWindow", u"Jump to APROM", None))
         self.btn_Write.setText(QCoreApplication.translate("MainWindow", u"Start Write", None))
         self.btn_Erase.setText(QCoreApplication.translate("MainWindow", u"Erase All", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Progress", None))

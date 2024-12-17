@@ -20,6 +20,7 @@ config_type_M460 = {PROJ_M460HD, PROJ_M460LD}
 config_type_M471 = {PROJ_M471}
 config_type_M480 = {PROJ_M480}
 config_type_M480LD = {PROJ_M480LD}
+config_type_M55M1 = {PROJ_M55M1}
 config_type_MINI51 = {PROJ_MINI51AN}
 config_type_MINI51CN = {PROJ_MINI51DE, PROJ_MINI58}
 config_type_MINI55 = {PROJ_MINI55}
@@ -108,6 +109,8 @@ def config_setting_str(chip_type):
         return "M2L31"
     elif (chip_type in config_type_M2003):
         return "M2003"
+    elif (chip_type in config_type_M55M1):
+        return "M55M1"
         
     return ""
 
