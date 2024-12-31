@@ -105,6 +105,8 @@ DLL_EXPORT  void ISP_CAN_UpdateDataFlash(io_handle_t* handle, unsigned int start
 DLL_EXPORT  unsigned int ISP_CAN_Connect(io_handle_t* handle, unsigned int dwMilliseconds);
 DLL_EXPORT  unsigned int ISP_CAN_RunAPROM(io_handle_t* handle);
 
+DLL_EXPORT  unsigned int ISP_SendSingleCommand(io_handle_t* handle, unsigned int cmd);
+
 #ifdef __cplusplus
 }
 #endif

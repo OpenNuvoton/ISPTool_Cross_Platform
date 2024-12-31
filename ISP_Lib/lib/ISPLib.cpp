@@ -406,3 +406,8 @@ unsigned int ISP_CAN_RunAPROM(io_handle_t* handle)
 {
     return ISP_CAN_Write(handle, CAN_CMD_RUN_APROM, 0);
 }
+
+unsigned int ISP_SendSingleCommand(io_handle_t* handle, unsigned int cmd)
+{
+    return ISP_Write(handle, cmd, NULL, 0, USBCMD_TIMEOUT_LONG);
+}
