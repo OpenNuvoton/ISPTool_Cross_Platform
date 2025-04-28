@@ -42,7 +42,7 @@ void ISP_ReOpen(io_handle_t* handle)
 unsigned int ISP_Read(io_handle_t* handle, unsigned char* pcBuffer,
                       unsigned int szMaxLen, unsigned int dwMilliseconds, unsigned int bCheckIndex)
 {
-    unsigned char usCheckSum = 0;
+    unsigned short usCheckSum = 0;
     unsigned int uCmdIndex = 0;
     unsigned int dwLength = 0;
     handle->bResendFlag = FALSE;
@@ -87,8 +87,8 @@ unsigned int ISP_Write(io_handle_t* handle, unsigned int uCmd,
         dwCmdLength = sizeof(handle->ac_buffer) - 9;
     }
     memset(handle->ac_buffer, 0, sizeof(handle->ac_buffer));
-    *(&(handle->ac_buffer[1])) = uCmd;
-    *(&(handle->ac_buffer[5])) = handle->m_uCmdIndex;
+    memcpy(&handle->ac_buffer[1], &uCmd, sizeof(uCmd));
+    memcpy(&handle->ac_buffer[5], &handle->m_uCmdIndex, sizeof(handle->m_uCmdIndex));
     if (pcBuffer != NULL && dwCmdLength > 0) {
         memcpy((unsigned char*)(&(handle->ac_buffer[9])), pcBuffer, dwCmdLength);
     }

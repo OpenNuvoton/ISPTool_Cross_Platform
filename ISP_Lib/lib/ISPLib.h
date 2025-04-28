@@ -36,7 +36,7 @@ typedef struct {
 typedef struct {
     unsigned int dev_open;
     unsigned int bResendFlag;
-    unsigned char m_usCheckSum;
+    unsigned short m_usCheckSum;
     unsigned int m_uCmdIndex;
     unsigned int m_intf;
     unsigned char ac_buffer[65];

@@ -61,9 +61,11 @@ def GetStaticInfo(UID, config):
         page_size = 1 << (((flash_type & 0x0000FF00) >>  8) + 9)
     
     elif os.name == 'nt':  # Windows
-        pConfig = (c_uint * 4)
-        pConfig[0] = config[0]
-        pConfig[1] = config[1]
+        pConfig = (c_uint * 4)()
+        temp_list = list(pConfig)
+        temp_list[0] = config[0]
+        temp_list[1] = config[1]
+        pConfig = (c_int * 4)(*temp_list)
         
         if get_NuVoice_info(UID, pConfig):
             chip_name = gNuVoiceChip.sChipName.split('\0', 1)[0]

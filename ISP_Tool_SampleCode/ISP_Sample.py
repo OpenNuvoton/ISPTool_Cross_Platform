@@ -45,7 +45,7 @@ class io_handle_t(Structure):
     _fields_ = [
         ("dev_open", c_uint),
         ("bResendFlag", c_uint),
-        ("m_usCheckSum",c_ubyte),
+        ("m_usCheckSum",c_ushort),
         ("m_uCmdIndex",c_uint),
         ("m_intf",c_uint),
         ("ac_buffer",c_ubyte * 65),
@@ -147,7 +147,7 @@ class USB_dev_io:
         try:
             data = (c_ubyte * 65).from_address(ctypes.addressof(buffer.contents))
             bytes_data = bytearray(data)
-            
+            print(bytes_data)
             bytes_written = self.dev.write(bytes_data)
             if bytes_written >= len(bytes_data):
                 return 1
@@ -555,9 +555,9 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         ctp = self.chip_type 
         
         #debug
-        #ctp = PROJ_M2L31
-        #self.memory_size = 512 * 1024
-        #self.page_size = 4 * 1024
+        #ctp = PROJ_M55M1
+        #self.memory_size = 2048 * 1024
+        #self.page_size = 8 * 1024
         
         if config_setting_str(ctp) == "":
             import ui.config_type_0 as UI  
