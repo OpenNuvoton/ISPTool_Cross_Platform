@@ -49,9 +49,9 @@ unsigned int ISP_Read(io_handle_t* handle, unsigned char* pcBuffer, unsigned int
 			return FALSE;
 		}
 		memset(handle->ac_buffer, 0, sizeof(handle->ac_buffer));
-		if (szMaxLen == 0) {
-			return TRUE;
-		}
+		//if (szMaxLen == 0) {
+		//	return TRUE;
+		//}
 		dwLength = handle->m_dev_io.read(dwMilliseconds, handle->ac_buffer);
 		if (!dwLength) {
 			return FALSE;

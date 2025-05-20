@@ -387,8 +387,8 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                 if self.lib.ISP_CAN_Connect(byref(self.io_handle_t), 4000):       
                     self.m_ulDeviceID = self.lib.ISP_CAN_GetDeviceID(byref(self.io_handle_t));
                     self.update_flash()  # to get chip_type only
-                    config_offset = {PROJ_M460HD, PROJ_M460LD, PROJ_M2L31} 
-                    offset = True if chip_type in config_offset else False
+                    config_offset = {PROJ_M460HD, PROJ_M460LD, PROJ_M2L31, PROJ_M55M1} 
+                    offset = True if self.chip_type in config_offset else False 
                     self.lib.ISP_CAN_ReadConfig(byref(self.io_handle_t), byref(self.config), offset);
                     self.update_flash()  # regular update flash
                     self.label_Connection.setText("Status: Connected")
@@ -519,12 +519,12 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
                     self.lib.ISP_ReadConfig(pointer(self.io_handle_t), self.config)
                 else:
                     config_offset = {PROJ_M460HD, PROJ_M460LD, PROJ_M2L31} 
-                    offset = True if chip_type in config_offset else False
+                    offset = True if self.chip_type in config_offset else False
                     self.lib.ISP_CAN_UpdateConfig(pointer(self.io_handle_t), self.wconfig, self.config, offset)
                     self.lib.ISP_CAN_ReadConfig(pointer(self.io_handle_t), self.config, offset)
         
             if self.checkBox_jump.isChecked():
-                self.lib.ISP_RunAPROM(pointer(m_io_handle_t))
+                self.lib.ISP_RunAPROM(pointer(self.io_handle_t))
                 
         self.update_flash()
             
