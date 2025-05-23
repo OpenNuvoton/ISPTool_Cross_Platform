@@ -11,6 +11,5 @@ def serial_ports():
         result.append(p.device)
     return result
 
-
 if __name__ == '__main__':
     print(serial_ports())

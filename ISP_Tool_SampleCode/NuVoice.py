@@ -1,6 +1,6 @@
 import ctypes
 import os
-from ctypes import *
+from ctypes import byref, c_char, c_int, c_uint, c_void_p, c_ulong, Structure, windll, CFUNCTYPE, WINFUNCTYPE, POINTER
 
 (
     ECE_NO_ERROR,
@@ -22,10 +22,10 @@ class I_ChipInfoManager(Structure):
         ("GetChipInfoByFindInfo", CFUNCTYPE(c_uint)),
         ("ExportChipInfo", CFUNCTYPE(c_uint)),
         ("CheckChipFromXLS", CFUNCTYPE(c_uint)),
-    ] 
-                
-CHIP_UCID_MAX_LEN = 4  
-CHIP_NAME_LEN = 100  
+    ]
+
+CHIP_UCID_MAX_LEN = 4
+CHIP_NAME_LEN = 100
 
 class sChipInfo(Structure):
     _fields_ = [
@@ -42,34 +42,34 @@ class sChipInfo(Structure):
         ("dwDataFlashAddress", c_ulong),
         ("dwDataFlashSize", c_ulong),
     ]
-    
+
 gNuVoiceChip = sChipInfo()
 
 def get_NuVoice_info(dwChipID, pConfig):
     ret = False
     hDll = None
-    BOOL = ctypes.c_int  
+    BOOL = ctypes.c_int
     CreateChipInfoManagerProto = WINFUNCTYPE(BOOL, POINTER(POINTER(I_ChipInfoManager)))
 
     if os.name == 'nt':  # Windows
         hDll = ctypes.windll.LoadLibrary('./GetChipInformation.dll')
     elif os.name == 'posix':  # Linux/Unix/MacOS
         return None
-        
+
     if hDll is not None:
         pCreateChipInfoManager = CreateChipInfoManagerProto(("CreateChipInfoManager", hDll))
-        
+
         if pCreateChipInfoManager:
             pChipInfoManager = POINTER(I_ChipInfoManager)()
-        
+
             if pCreateChipInfoManager(byref(pChipInfoManager)) == 1:  # Assuming TRUE is 1
                 err = pChipInfoManager.contents.GetChipInfo(dwChipID, gNuVoiceChip, pConfig)
-                
+
                 if err == ECE_NO_ERROR:
                     ret = True
-                
+
                 pChipInfoManager.contents.ReleaseDLL()
-                
+
         windll.kernel32.FreeLibrary(hDll)
-    
+
     return ret

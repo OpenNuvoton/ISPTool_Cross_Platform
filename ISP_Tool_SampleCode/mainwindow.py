@@ -379,4 +379,3 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Progress", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Write Progress:", None))
     # retranslateUi
-
