@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<ui version="4.0">
+  <class>Dialog</class>
+  <widget class="QDialog" name="Dialog">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>281</width>
+        <height>281</height>
+      </rect>
+    </property>
+    <layout class="QGridLayout" name="outer_layout">
+      <property name="leftMargin">
+        <number>6</number>
+      </property>
+      <property name="topMargin">
+        <number>6</number>
+      </property>
+      <property name="rightMargin">
+        <number>6</number>
+      </property>
+      <property name="bottomMargin">
+        <number>6</number>
+      </property>
+      <property name="spacing">
+        <number>6</number>
+      </property>
+      <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="IDC_GROUP_PLM_STAGE">
+          <property name="title">
+            <string>PLM Stage</string>
+          </property>
+          <layout class="QVBoxLayout" name="layout_IDC_GROUP_PLM_STAGE">
+            <item>
+              <widget class="QCheckBox" name="IDC_CHECK_PLM_UPDATE">
+                <property name="text">
+                  <string>Update Stage</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QRadioButton" name="IDC_RADIO_PLM_OEM">
+                <property name="text">
+                  <string>OEM Stage</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QRadioButton" name="IDC_RADIO_PLM_DEPLOYED">
+                <property name="text">
+                  <string>Deployed Stage</string>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QRadioButton" name="IDC_RADIO_PLM_RMA">
+                <property name="text">
+                  <string>RMA Stage</string>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <resources/>
+  <connections/>
+</ui>

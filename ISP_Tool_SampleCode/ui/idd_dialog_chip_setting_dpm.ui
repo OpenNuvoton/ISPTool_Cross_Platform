@@ -1,0 +1,219 @@
+<?xml version="1.0" ?>
+<ui version="4.0">
+  <class>Dialog</class>
+  <widget class="QDialog" name="Dialog">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>281</width>
+        <height>350</height>
+      </rect>
+    </property>
+    <layout class="QGridLayout" name="outer_layout">
+      <property name="leftMargin">
+        <number>6</number>
+      </property>
+      <property name="topMargin">
+        <number>6</number>
+      </property>
+      <property name="rightMargin">
+        <number>6</number>
+      </property>
+      <property name="bottomMargin">
+        <number>6</number>
+      </property>
+      <property name="spacing">
+        <number>6</number>
+      </property>
+      <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="IDC_GROUP_DPMS">
+          <property name="title">
+            <string>Secure</string>
+          </property>
+          <layout class="QGridLayout" name="layout_IDC_GROUP_DPMS">
+            <item row="0" column="0" colspan="2">
+              <widget class="QGroupBox" name="IDC_GROUP_DPMS_PASSWORD">
+                <property name="title">
+                  <string>DPM Password</string>
+                </property>
+                <layout class="QGridLayout" name="layout_IDC_GROUP_DPMS_PASSWORD">
+                  <item row="0" column="0" colspan="3">
+                    <widget class="QCheckBox" name="IDC_CHECK_DPMS_UPDATE">
+                      <property name="text">
+                        <string>Update Password</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="1" column="1">
+                    <widget class="QLabel" name="IDC_STATIC_KEY0">
+                      <property name="text">
+                        <string>Password 0: 0x</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="2" column="1">
+                    <widget class="QLabel" name="IDC_STATIC_KEY1">
+                      <property name="text">
+                        <string>Password 1: 0x</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="3" column="1">
+                    <widget class="QLabel" name="IDC_STATIC_KEY2">
+                      <property name="text">
+                        <string>Password 2: 0x</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="4" column="1">
+                    <widget class="QLabel" name="IDC_STATIC_KEY3">
+                      <property name="text">
+                        <string>Password 3: 0x</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="1" column="2" rowspan="2" colspan="2">
+                    <widget class="QLineEdit" name="IDC_EDIT_DPM_PSW0"/>
+                  </item>
+                  <item row="2" column="2" rowspan="2" colspan="2">
+                    <widget class="QLineEdit" name="IDC_EDIT_DPM_PSW1"/>
+                  </item>
+                  <item row="3" column="2" rowspan="2" colspan="2">
+                    <widget class="QLineEdit" name="IDC_EDIT_DPM_PSW2"/>
+                  </item>
+                  <item row="4" column="2" rowspan="2" colspan="2">
+                    <widget class="QLineEdit" name="IDC_EDIT_DPM_PSW3"/>
+                  </item>
+                  <item row="5" column="1" colspan="3">
+                    <widget class="QCheckBox" name="IDC_CHECK_SHOW_PASSWORD">
+                      <property name="text">
+                        <string>Show Password</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="5" column="3">
+                    <widget class="QCheckBox" name="IDC_CHECK_DPMS_RECORD">
+                      <property name="text">
+                        <string>Record Setting</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </widget>
+            </item>
+            <item row="1" column="0">
+              <widget class="QCheckBox" name="IDC_CHECK_SECURITYBOOT_LOCK">
+                <property name="text">
+                  <string>Secure Debug Lock</string>
+                </property>
+              </widget>
+            </item>
+            <item row="2" column="0">
+              <widget class="QCheckBox" name="IDC_CHECK_SECURE_DEBUG_DISABLE">
+                <property name="text">
+                  <string>Secure Debug Disable</string>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+        <widget class="QGroupBox" name="IDC_GROUP_DPMNS">
+          <property name="title">
+            <string>Non-Secure</string>
+          </property>
+          <layout class="QGridLayout" name="layout_IDC_GROUP_DPMNS">
+            <item row="0" column="0" colspan="2">
+              <widget class="QGroupBox" name="IDC_GROUP_DPMNS_PASSWORD">
+                <property name="title">
+                  <string>DPM Password</string>
+                </property>
+                <layout class="QGridLayout" name="layout_IDC_GROUP_DPMNS_PASSWORD">
+                  <item row="0" column="0" colspan="3">
+                    <widget class="QCheckBox" name="IDC_CHECK_DPMNS_UPDATE">
+                      <property name="text">
+                        <string>Update Password</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="1" column="1">
+                    <widget class="QLabel" name="IDC_STATIC_KEY4">
+                      <property name="text">
+                        <string>Password 0: 0x</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="2" column="1">
+                    <widget class="QLabel" name="IDC_STATIC_KEY5">
+                      <property name="text">
+                        <string>Password 1: 0x</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="3" column="1">
+                    <widget class="QLabel" name="IDC_STATIC_KEY6">
+                      <property name="text">
+                        <string>Password 2: 0x</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="4" column="1">
+                    <widget class="QLabel" name="IDC_STATIC_KEY7">
+                      <property name="text">
+                        <string>Password 3: 0x</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="1" column="2" rowspan="2" colspan="2">
+                    <widget class="QLineEdit" name="IDC_EDIT_DPM_PSW4"/>
+                  </item>
+                  <item row="2" column="2" rowspan="2" colspan="2">
+                    <widget class="QLineEdit" name="IDC_EDIT_DPM_PSW5"/>
+                  </item>
+                  <item row="3" column="2" rowspan="2" colspan="2">
+                    <widget class="QLineEdit" name="IDC_EDIT_DPM_PSW6"/>
+                  </item>
+                  <item row="4" column="2" rowspan="2" colspan="2">
+                    <widget class="QLineEdit" name="IDC_EDIT_DPM_PSW7"/>
+                  </item>
+                  <item row="5" column="1" colspan="3">
+                    <widget class="QCheckBox" name="IDC_CHECK_SHOW_PASSWORD_1">
+                      <property name="text">
+                        <string>Show Password</string>
+                      </property>
+                    </widget>
+                  </item>
+                  <item row="5" column="3">
+                    <widget class="QCheckBox" name="IDC_CHECK_DPMNS_RECORD">
+                      <property name="text">
+                        <string>Record Setting</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </widget>
+            </item>
+            <item row="1" column="0">
+              <widget class="QCheckBox" name="IDC_CHECK_SECURITY_LOCK">
+                <property name="text">
+                  <string>Non-Secure Debug Lock</string>
+                </property>
+              </widget>
+            </item>
+            <item row="2" column="0">
+              <widget class="QCheckBox" name="IDC_CHECK_NSECURE_DEBUG_DISABLE">
+                <property name="text">
+                  <string>Non-Secure Debug Disable</string>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <resources/>
+  <connections/>
+</ui>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>640</width>
+    <height>360</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="outer_layout">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <item row="2" column="0" colspan="4">
+    <widget class="QGroupBox" name="IDC_GROUP_CONFIG_VALUE">
+     <property name="title">
+      <string>Config Value</string>
+     </property>
+     <layout class="QHBoxLayout" name="layout_IDC_GROUP_CONFIG_VALUE">
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_16">
+        <property name="text">
+         <string>Config 16:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_16">
+        <property name="text">
+         <string>0x00000000</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_17">
+        <property name="text">
+         <string>Config 17:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_17">
+        <property name="text">
+         <string>0x00000000</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_18">
+        <property name="text">
+         <string>Config 18:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_18">
+        <property name="text">
+         <string>0x00000000</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_DATAFLASH_WPROT">
+     <property name="title">
+      <string>Data Flash Function Safety Protect</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="IDC_CHECK_DATAFLASH_WPROT_0">
+        <property name="text">
+         <string>Region 0: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="IDC_CHECK_DATAFLASH_WPROT_1">
+        <property name="text">
+         <string>Region 1: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="IDC_CHECK_DATAFLASH_WPROT_2">
+        <property name="text">
+         <string>Region 2: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="IDC_CHECK_DATAFLASH_WPROT_3">
+        <property name="text">
+         <string>Region 3: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_LDROM_WPROT">
+     <property name="title">
+      <string>LDROM Function Safety Protect</string>
+     </property>
+     <layout class="QVBoxLayout" name="layout_IDC_GROUP_LDROM_WPROT">
+      <item>
+       <widget class="QCheckBox" name="IDC_CHECK_LDROM_WPROT_0">
+        <property name="text">
+         <string>Region 0: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="IDC_GROUP_LDROM_WPROT_LEVEL">
+        <property name="title">
+         <string>LDROM Write Protect One Time Lock Level Selection</string>
+        </property>
+        <layout class="QHBoxLayout" name="layout_IDC_GROUP_LDROM_WPROT_LEVEL">
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_LDROM_WPROT_LEVEL0">
+           <property name="text">
+            <string>Level 0</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_LDROM_WPROT_LEVEL1">
+           <property name="text">
+            <string>Level 1</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

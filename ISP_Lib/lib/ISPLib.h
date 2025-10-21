@@ -12,12 +12,15 @@
 #define CMD_CONNECT             0x000000AE
 #define CMD_UPDATE_DATAFLASH    0x000000C3
 #define CMD_RESEND_PACKET       0x000000FF
+#define CMD_READ_CONFIG_EXT     0x000000E0
+#define CMD_UPDATE_CONFIG_EXT   0x000000E1
 #define CMD_ERASE_SPIFLASH      0x000000D0
 #define CMD_UPDATE_SPIFLASH     0x000000D1
 
 #define CAN_CMD_READ_CONFIG     0xA2000000
 #define CAN_CMD_RUN_APROM       0xAB000000
 #define CAN_CMD_GET_DEVICEID    0xB1000000
+#define CAN_CMD_SECOND_READ     0xB3000000
 
 #define USBCMD_TIMEOUT          50000
 #define USBCMD_TIMEOUT_LONG     250000
@@ -68,7 +71,10 @@ DLL_EXPORT  unsigned int ISP_Write(io_handle_t* handle, unsigned int uCmd, unsig
 
 DLL_EXPORT  void ISP_UpdateConfig(io_handle_t* handle, unsigned int config[],
                                   unsigned int response[]);
+DLL_EXPORT  void ISP_UpdateConfig_Ext(io_handle_t* handle, unsigned int config[], 
+                                  unsigned int response[], unsigned int i);
 DLL_EXPORT  void ISP_ReadConfig(io_handle_t* handle, unsigned int config[]);
+DLL_EXPORT  void ISP_ReadConfig_Ext(io_handle_t* handle, unsigned int config[], unsigned int i);
 DLL_EXPORT  void ISP_SyncPackNo(io_handle_t* handle);
 DLL_EXPORT  void ISP_UpdateAPROM(io_handle_t* handle, unsigned int start_addr,
                                  unsigned int total_len, unsigned int cur_addr, unsigned char *buffer, unsigned int *update_len);
@@ -98,10 +104,17 @@ DLL_EXPORT  unsigned int ISP_CAN_GetDeviceID(io_handle_t* handle);
 DLL_EXPORT  void ISP_CAN_ReadConfig(io_handle_t* handle, unsigned int config[], bool offset);
 DLL_EXPORT  void ISP_CAN_UpdateConfig(io_handle_t* handle, unsigned int config[],
                                       unsigned int response[], bool offset);
+DLL_EXPORT  void ISP_CAN_ReadConfig_Ext(io_handle_t* handle, unsigned int config[], bool offset, unsigned int i);
+DLL_EXPORT  void ISP_CAN_UpdateConfig_Ext(io_handle_t* handle, unsigned int config[],
+                                      unsigned int response[], bool offset, unsigned int i);
 DLL_EXPORT  void ISP_CAN_UpdateAPROM(io_handle_t* handle, unsigned int start_addr,
                                      unsigned int total_len, unsigned int cur_addr, unsigned char *buffer, unsigned int *update_len);
 DLL_EXPORT  void ISP_CAN_UpdateDataFlash(io_handle_t* handle, unsigned int start_addr,
-        unsigned int total_len, unsigned int cur_addr, unsigned char *buffer, unsigned int *update_len);
+                                     unsigned int total_len, unsigned int cur_addr, unsigned char *buffer, unsigned int *update_len);
+DLL_EXPORT  void ISP_CAN_UpdateAPROM_64(io_handle_t* handle, unsigned int start_addr,
+                                     unsigned int total_len, unsigned int cur_addr, unsigned char *buffer, unsigned int *update_len);
+DLL_EXPORT  void ISP_CAN_UpdateDataFlash_64(io_handle_t* handle, unsigned int start_addr,
+                                     unsigned int total_len, unsigned int cur_addr, unsigned char *buffer, unsigned int *update_len);
 DLL_EXPORT  unsigned int ISP_CAN_Connect(io_handle_t* handle, unsigned int dwMilliseconds);
 DLL_EXPORT  unsigned int ISP_CAN_RunAPROM(io_handle_t* handle);
 

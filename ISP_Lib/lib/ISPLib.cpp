@@ -115,10 +115,43 @@ void ISP_UpdateConfig(io_handle_t* handle, unsigned int config[],
     ISP_Read(handle, (unsigned char*)response, 56, USBCMD_TIMEOUT_LONG, TRUE);
 }
 
+void ISP_UpdateConfig_Ext(io_handle_t* handle, unsigned int config[],
+                      unsigned int response[], unsigned int i)
+{
+    unsigned char ext_buffer[8];
+    unsigned int index = i;
+    if (i >= 16 && i <= 18) {
+        index += 16;  // CONFIG_16 at 0x0F300080 not 0x0F300040
+    }
+    unsigned int j = i - i % 2;
+    unsigned int index_j = index - index % 2;
+    memcpy(&ext_buffer[0], &index_j, 4);
+    memcpy(&ext_buffer[4], &config[j], 4);
+    if (j + 1 <= 18) {
+        memcpy(&ext_buffer[8], &config[j + 1], 4);
+    }
+    else {
+        unsigned int empty = 0xFFFFFFFF;
+        memcpy(&ext_buffer[8], &empty, 4);
+    }
+    ISP_Write(handle, CMD_UPDATE_CONFIG_EXT, ext_buffer, 12, USBCMD_TIMEOUT_LONG);
+    ISP_Read(handle, (unsigned char*)&response[j], 8, USBCMD_TIMEOUT_LONG, TRUE);
+}
+
 void ISP_ReadConfig(io_handle_t* handle, unsigned int config[])
 {
     ISP_Write(handle, CMD_READ_CONFIG, NULL, 0, USBCMD_TIMEOUT);
     ISP_Read(handle, (unsigned char*)config, 56, USBCMD_TIMEOUT, TRUE);
+}
+
+void ISP_ReadConfig_Ext(io_handle_t* handle, unsigned int config[], unsigned int i)
+{
+    unsigned int index = i;
+    if (i >= 16 && i <= 18) {
+        index += 16;  // CONFIG_16 at 0x0F300080 not 0x0F300040
+    }
+    ISP_Write(handle, CMD_READ_CONFIG_EXT, (unsigned char*)&index, 0, USBCMD_TIMEOUT);
+    ISP_Read(handle, (unsigned char*)&config[i], 4, USBCMD_TIMEOUT, TRUE);
 }
 
 void ISP_SyncPackNo(io_handle_t* handle)
@@ -361,6 +394,38 @@ void ISP_CAN_UpdateConfig(io_handle_t* handle, unsigned int config[],
     }
 }
 
+void ISP_CAN_ReadConfig_Ext(io_handle_t* handle, unsigned int config[],
+                        bool offset, unsigned int i)
+{
+    int offset_v = (offset) ? 0x0 : 0x0F000000;
+    unsigned int index = i;
+    if (i >= 16 && i <= 18) {
+        index += 16;  // CONFIG_16 at 0x0F300080 not 0x0F300040
+    }
+    if (ISP_CAN_Write(handle, CAN_CMD_READ_CONFIG, offset_v + 0x00300000 + 4 * index)) {
+        if (ISP_CAN_Read(handle)) {
+            config[i] = *((unsigned long*) & (handle->ac_buffer[5]));
+        }
+    }
+}
+
+void ISP_CAN_UpdateConfig_Ext(io_handle_t* handle, unsigned int config[],
+                          unsigned int response[], bool offset, unsigned int i)
+{
+    int offset_v = (offset) ? 0x0 : 0x0F000000;
+    unsigned int index = i;
+    if (i >= 16 && i <= 18) {
+        index += 16;  // CONFIG_16 at 0x0F300080 not 0x0F300040
+    }
+    
+    if (ISP_CAN_Write(handle, offset_v + 0x00300000 + 4 * index, config[i])) {
+        if (ISP_CAN_Read(handle)) {
+            response[i] = *((unsigned long*) & (handle->ac_buffer[5]));
+        }
+    }
+
+}
+
 void ISP_CAN_UpdateAPROM(io_handle_t* handle, unsigned int start_addr,
                          unsigned int total_len, unsigned int cur_addr, unsigned char *buffer,
                          unsigned int *update_len)
@@ -390,6 +455,52 @@ void ISP_CAN_UpdateDataFlash(io_handle_t* handle, unsigned int start_addr,
                              unsigned int *update_len)
 {
     ISP_CAN_UpdateAPROM(handle, start_addr, total_len, cur_addr, buffer,
+                        update_len);
+}
+
+void ISP_CAN_UpdateAPROM_64(io_handle_t* handle, unsigned int start_addr,
+                         unsigned int total_len, unsigned int cur_addr, unsigned char *buffer,
+                         unsigned int *update_len)
+{
+    handle->bResendFlag = TRUE;
+    unsigned int write_len = total_len - (cur_addr - start_addr);
+    unsigned char acBuffer[56];
+    if (write_len > 8) {
+        write_len = 8;
+    }
+    if (write_len) {
+        char ret_1 = 1, ret_2 = 1, ret_3 = 1;
+        unsigned long data_1 = 0;
+        unsigned long data_2 = 0;
+        memcpy(&data_1, buffer, 4);
+        memcpy(&data_2, buffer + 4, 4);
+        if (ISP_CAN_Write(handle, cur_addr, data_1)) {
+            if (ISP_CAN_Read(handle)) {
+                ret_1 = 0;
+            }
+        }
+        if (ISP_CAN_Write(handle, cur_addr + 4, data_2)) {
+            if (ISP_CAN_Read(handle)) {
+                ret_2 = 0;
+            }
+        }
+        if (ISP_CAN_Write(handle, CAN_CMD_SECOND_READ, cur_addr + 4)) {
+            if (ISP_CAN_Read(handle)) {
+                ret_3 = 0;
+            }
+        }
+        handle->bResendFlag = ret_1 | ret_2 | ret_3;
+    }
+    if (update_len != NULL) {
+        *update_len = write_len;
+    }
+}
+
+void ISP_CAN_UpdateDataFlash_64(io_handle_t* handle, unsigned int start_addr,
+                             unsigned int total_len, unsigned int cur_addr, unsigned char *buffer,
+                             unsigned int *update_len)
+{
+    ISP_CAN_UpdateAPROM_64(handle, start_addr, total_len, cur_addr, buffer,
                         update_len);
 }
 

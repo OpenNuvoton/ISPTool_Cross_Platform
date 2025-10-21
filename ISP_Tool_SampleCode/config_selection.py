@@ -37,6 +37,12 @@ config_type_NUC1262 = {PROJ_NUC1262, PROJ_NUC1263}
 config_type_NUC131 = {PROJ_NUC1311, PROJ_M0518}
 config_type_NUC200 = {PROJ_NUC100DN, PROJ_NUC200AE, PROJ_NUC2201}
 config_type_NUC400 = {PROJ_NUC400AE}
+config_type_M3331 = {PROJ_M3331IG, PROJ_M3331G}
+config_type_M2A23 = {PROJ_M2A23}
+config_type_M2U51 = {PROJ_M2U51G, PROJ_M2U51C}
+config_type_8051 = {PROJ_N76E885, PROJ_N76E616 ,PROJ_N76E003, PROJ_ML51_32K, PROJ_ML51_16K,
+                       PROJ_MS51_16K, PROJ_MS51_8K, PROJ_MS51_32K, PROJ_ML56, PROJ_MUG51,
+                       PROJ_MG51, PROJ_MG51D}
 
 category_name_pairs = [
     (config_type_M030G, "M030G"),
@@ -75,6 +81,10 @@ category_name_pairs = [
     (config_type_NUC131, "NUC131"),
     (config_type_NUC200, "NUC200"),
     (config_type_NUC400, "NUC400"),
+    (config_type_M3331, "M3331"),
+    (config_type_M2A23, "M2A23"),
+    (config_type_M2A23, "M2U51"),
+    (config_type_8051, "8051"),
 ]
 
 CHIP_TYPE_NAME_MAP: dict[int, str] = {}

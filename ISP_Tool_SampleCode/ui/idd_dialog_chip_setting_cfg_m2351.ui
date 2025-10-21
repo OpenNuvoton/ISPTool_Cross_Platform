@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>419</width>
+    <height>456</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="outer_layout">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <item row="0" column="1" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_BOOT_SELECT">
+     <property name="title">
+      <string>Chip Booting Selection</string>
+     </property>
+     <layout class="QGridLayout" name="layout_IDC_GROUP_BOOT_SELECT">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_BS_APROM_LDROM">
+        <property name="text">
+         <string>APROM with IAP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_BS_LDROM_APROM">
+        <property name="text">
+         <string>LDROM with IAP</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="IDC_CHECK_BS_MKROM">
+        <property name="text">
+         <string>Boot Loader with IAP</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_IO_STATE">
+     <property name="title">
+      <string>I/O Initial State Selection</string>
+     </property>
+     <layout class="QHBoxLayout" name="layout_IDC_GROUP_IO_STATE">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_IO_TRI">
+        <property name="text">
+         <string>Input Tri-state Mode</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_IO_BI">
+        <property name="text">
+         <string>Quasi Bi-directional Mode</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_BROWN_OUT_VOLTAGE">
+     <property name="title">
+      <string>Brown Out Voltage</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_7">
+        <property name="text">
+         <string>3.0V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_6">
+        <property name="text">
+         <string>2.8V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_5">
+        <property name="text">
+         <string>2.6V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_4">
+        <property name="text">
+         <string>2.4V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_3">
+        <property name="text">
+         <string>2.2V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_2">
+        <property name="text">
+         <string>2.0V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_1">
+        <property name="text">
+         <string>1.8V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_0">
+        <property name="text">
+         <string>1.6V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="IDC_CHECK_BROWN_OUT_DETECT">
+        <property name="text">
+         <string>Brown Out Detector</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="QCheckBox" name="IDC_CHECK_BROWN_OUT_RESET">
+        <property name="text">
+         <string>Brown Out Reset</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_GPF">
+     <property name="title">
+      <string>HXT Mode Selection</string>
+     </property>
+     <layout class="QHBoxLayout" name="layout_IDC_GROUP_GPF">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_GPF_CRYSTAL">
+        <property name="text">
+         <string>Crystal Mode</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_GPF_GPIO">
+        <property name="text">
+         <string>External Clock Source Mode</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_WDT">
+     <property name="title">
+      <string>Watchdog Timer Mode Selection</string>
+     </property>
+     <layout class="QVBoxLayout" name="layout_IDC_GROUP_WDT">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_WDT_DISABLE">
+        <property name="text">
+         <string>WDT is inactive.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_WDT_ENABLE_KEEP">
+        <property name="text">
+         <string>WDT is active and WDT clock is always on.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_WDT_ENABLE_STOP">
+        <property name="text">
+         <string>WDT is active and WDT clock is controlled by LIRCEN in power-down.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_UART1_SELECT">
+     <property name="title">
+      <string>Boot Loader UART1 TXD/RXD Multi-function Pin Select</string>
+     </property>
+     <layout class="QGridLayout" name="layout_IDC_GROUP_UART1_SELECT">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_UART1_SEL4">
+        <property name="text">
+         <string>PA.3/PA.2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_UART1_SEL3">
+        <property name="text">
+         <string>PB.3/PB.2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_UART1_SEL2">
+        <property name="text">
+         <string>PF.0/PF.1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_UART1_SEL1">
+        <property name="text">
+         <string>PA.9/PA.8</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_UART1_SEL0">
+        <property name="text">
+         <string>PB.7/PB.6</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_CONFIG">
+     <property name="title">
+      <string>Config Value</string>
+     </property>
+     <layout class="QHBoxLayout" name="layout_IDC_GROUP_CONFIG">
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_0">
+        <property name="text">
+         <string>Config 0:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_0">
+        <property name="text">
+         <string>0x00000000</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_3">
+        <property name="text">
+         <string>Config 3:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_3">
+        <property name="text">
+         <string>0x00000000</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QCheckBox" name="IDC_CHECK_TAMPER_POWER_DOWN">
+     <property name="text">
+      <string>Tamper Domain Power Down</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

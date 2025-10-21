@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>627</width>
+    <height>673</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="outer_layout">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <item row="0" column="4" rowspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_BOOT_SELECT">
+     <property name="title">
+      <string>Boot Options</string>
+     </property>
+     <layout class="QVBoxLayout" name="layout_IDC_GROUP_BOOT_SELECT">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_BS_APROM">
+        <property name="text">
+         <string>APROM</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_BS_LDROM">
+        <property name="text">
+         <string>LDROM</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="4" rowspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_LDSIZE">
+     <property name="title">
+      <string>LDROM Size Options</string>
+     </property>
+     <layout class="QVBoxLayout" name="layout_IDC_GROUP_LDSIZE">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_LDSIZE_0K">
+        <property name="text">
+         <string>No LDROM</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_LDSIZE_1K">
+        <property name="text">
+         <string>LDROM = 1KB</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_LDSIZE_2K">
+        <property name="text">
+         <string>LDROM = 2KB</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_LDSIZE_3K">
+        <property name="text">
+         <string>LDROM = 3KB</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_LDSIZE_4K">
+        <property name="text">
+         <string>LDROM = 4KB</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="13" column="4">
+    <widget class="QPushButton" name="IDOK">
+     <property name="text">
+      <string>OK</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="4">
+    <widget class="QCheckBox" name="IDC_CHECK_SECURITY_LOCK">
+     <property name="text">
+      <string>Security Lock</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="4">
+    <widget class="QCheckBox" name="IDC_CHECK_OCD_ENABLE">
+     <property name="text">
+      <string>OCD Enable</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="5">
+    <widget class="QCheckBox" name="IDC_CHECK_ADCINTEN">
+     <property name="text">
+      <string>ADC compare mode is the same as N76E003</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="5">
+    <widget class="QGroupBox" name="IDC_GROUP_RPD">
+     <property name="title">
+      <string>Px.n/RST Pin Function</string>
+     </property>
+     <layout class="QGridLayout" name="layout_IDC_GROUP_RPD">
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_RPD_RESET">
+        <property name="text">
+         <string>Px.n as the external reset pin</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_RPD_INPUT">
+        <property name="text">
+         <string>Px.n as the input-only pin</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="4" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_BROWN_OUT_VOLTAGE">
+     <property name="title">
+      <string>Brown-out Detector Options</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_7">
+        <property name="text">
+         <string>1.7V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_6">
+        <property name="text">
+         <string>2.0V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_5">
+        <property name="text">
+         <string>2.2V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_4">
+        <property name="text">
+         <string>2.4V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_3">
+        <property name="text">
+         <string>2.7V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_2">
+        <property name="text">
+         <string>3.0V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_1">
+        <property name="text">
+         <string>3.7V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QRadioButton" name="IDC_RADIO_BOV_0">
+        <property name="text">
+         <string>4.3V</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QCheckBox" name="IDC_CHECK_BROWN_OUT_ENABLE">
+        <property name="text">
+         <string>Brown-out Detect Enable</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="QCheckBox" name="IDC_CHECK_BROWN_OUT_RESET">
+        <property name="text">
+         <string>Brown-out Reset Enable</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="IDC_CHECK_BROWN_OUT_IAP">
+        <property name="text">
+         <string>Brown-out Inhibiting IAP</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="7" column="4" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_WDT">
+     <property name="title">
+      <string>WDT Options</string>
+     </property>
+     <layout class="QVBoxLayout" name="layout_IDC_GROUP_WDT">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_WDT_DISABLE">
+        <property name="text">
+         <string>Disabled.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_WDT_ENABLE_STOP">
+        <property name="text">
+         <string>Enabled and stop running in Idle/Power-down mode.</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_WDT_ENABLE_KEEP">
+        <property name="text">
+         <string>Enabled and keep running in Idle/Power-down mode.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="4" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_SYSCLKDIV">
+     <property name="title">
+      <string>System Clock Divider Selection</string>
+     </property>
+     <layout class="QGridLayout" name="layout_IDC_GROUP_SYSCLKDIV">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_SYSCLKDIV_3">
+        <property name="text">
+         <string>Divided by 1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_SYSCLKDIV_2">
+        <property name="text">
+         <string>Divided by 2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="IDC_RADIO_SYSCLKDIV_1">
+        <property name="text">
+         <string>Divided by 4</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QRadioButton" name="IDC_RADIO_SYSCLKDIV_0">
+        <property name="text">
+         <string>Divided by 6</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QGroupBox" name="IDC_GROUP_FSYS">
+     <property name="title">
+      <string>Default Fsys in power-on sequence</string>
+     </property>
+     <layout class="QVBoxLayout" name="layout_IDC_GROUP_FSYS">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_FSYS_HIRC">
+        <property name="text">
+         <string>HIRC selected</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_FSYS_LIRC">
+        <property name="text">
+         <string>LIRC selected and HIRC off</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="5">
+    <widget class="QGroupBox" name="IDC_GROUP_IODEFAULT">
+     <property name="title">
+      <string>GPIO Pin Default Selection</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_IODEFAULT_INPUT">
+        <property name="text">
+         <string>Input mode</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_IODEFAULT_QUASI">
+        <property name="text">
+         <string>Quasi mode</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="5">
+    <widget class="QGroupBox" name="IDC_GROUP_OCDPWM">
+     <property name="title">
+      <string>PWM output state under OCD halt</string>
+     </property>
+     <layout class="QVBoxLayout" name="layout_IDC_GROUP_OCDPWM">
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_OCDPWM_TRI">
+        <property name="text">
+         <string>Tri-state</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="IDC_RADIO_OCDPWM_CONTI">
+        <property name="text">
+         <string>PWM continues</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="13" column="5">
+    <widget class="QPushButton" name="IDCANCEL">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="4" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_CONFIG_VALUE">
+     <property name="title">
+      <string>Config Value</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_0">
+        <property name="text">
+         <string>Config 0:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_0">
+        <property name="text">
+         <string>0xFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_1">
+        <property name="text">
+         <string>Config 1:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_1">
+        <property name="text">
+         <string>0xFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_2">
+        <property name="text">
+         <string>Config 2:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_2">
+        <property name="text">
+         <string>0xFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_3">
+        <property name="text">
+         <string>Config 3:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_3">
+        <property name="text">
+         <string>0xFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_4">
+        <property name="text">
+         <string>Config 4:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_4">
+        <property name="text">
+         <string>0xFF</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<ui version="4.0">
+  <class>Dialog</class>
+  <widget class="QDialog" name="Dialog">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>281</width>
+        <height>281</height>
+      </rect>
+    </property>
+    <layout class="QGridLayout" name="outer_layout">
+      <property name="leftMargin">
+        <number>6</number>
+      </property>
+      <property name="topMargin">
+        <number>6</number>
+      </property>
+      <property name="rightMargin">
+        <number>6</number>
+      </property>
+      <property name="bottomMargin">
+        <number>6</number>
+      </property>
+      <property name="spacing">
+        <number>6</number>
+      </property>
+      <item row="0" column="1">
+        <widget class="QCheckBox" name="IDC_CHECK_KPROM_UPDATE">
+          <property name="text">
+            <string>Update KPROM settings</string>
+          </property>
+        </widget>
+      </item>
+      <item row="1" column="0">
+        <widget class="QLabel" name="IDC_STATIC_KEY0">
+          <property name="text">
+            <string>Key0: 0x</string>
+          </property>
+        </widget>
+      </item>
+      <item row="2" column="0">
+        <widget class="QLabel" name="IDC_STATIC_KEY1">
+          <property name="text">
+            <string>Key1: 0x</string>
+          </property>
+        </widget>
+      </item>
+      <item row="3" column="0">
+        <widget class="QLabel" name="IDC_STATIC_KEY2">
+          <property name="text">
+            <string>Key2: 0x</string>
+          </property>
+        </widget>
+      </item>
+      <item row="5" column="3">
+        <widget class="QLabel" name="IDC_STATIC_KPROM_KPMAX">
+          <property name="text">
+            <string>Power-On Max. Number of Error Key Entry (1~7):</string>
+          </property>
+        </widget>
+      </item>
+      <item row="6" column="4">
+        <widget class="QLabel" name="IDC_STATIC_KPROM_KEMAX">
+          <property name="text">
+            <string>Max. Number of Error Key Entry for Each Power-On (0~31):</string>
+          </property>
+        </widget>
+      </item>
+      <item row="7" column="1">
+        <widget class="QLabel" name="IDC_STATIC_KPROM_KEYEN">
+          <property name="text">
+            <string>Write-Protected Region:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="7" column="5">
+        <widget class="QCheckBox" name="IDC_CHECK_KEYENROM_APROM">
+          <property name="text">
+            <string>KPROM, LDROM, APROM</string>
+          </property>
+        </widget>
+      </item>
+      <item row="7" column="8">
+        <widget class="QCheckBox" name="IDC_CHECK_KEYENROM_CONFIG">
+          <property name="text">
+            <string>CONFIG</string>
+          </property>
+        </widget>
+      </item>
+      <item row="1" column="2">
+        <widget class="QLineEdit" name="IDC_EDIT_KEY0ROM_VALUE"/>
+      </item>
+      <item row="2" column="2">
+        <widget class="QLineEdit" name="IDC_EDIT_KEY1ROM_VALUE"/>
+      </item>
+      <item row="3" column="2">
+        <widget class="QLineEdit" name="IDC_EDIT_KEY2ROM_VALUE"/>
+      </item>
+      <item row="5" column="7">
+        <widget class="QLineEdit" name="IDC_EDIT_KPMAXROM_VALUE"/>
+      </item>
+      <item row="6" column="8">
+        <widget class="QLineEdit" name="IDC_EDIT_KEMAXROM_VALUE"/>
+      </item>
+      <item row="4" column="1">
+        <widget class="QCheckBox" name="IDC_CHECK_SHOW_PASSWORD">
+          <property name="text">
+            <string>Show Characters</string>
+          </property>
+        </widget>
+      </item>
+      <item row="4" column="6">
+        <widget class="QCheckBox" name="IDC_CHECK_KPROM_RECORD">
+          <property name="text">
+            <string>Record KPROM Settings</string>
+          </property>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <resources/>
+  <connections/>
+</ui>

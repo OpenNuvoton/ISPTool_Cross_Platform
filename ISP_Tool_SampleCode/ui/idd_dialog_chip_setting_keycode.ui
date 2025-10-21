@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<ui version="4.0">
+  <class>Dialog</class>
+  <widget class="QDialog" name="Dialog">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>281</width>
+        <height>175</height>
+      </rect>
+    </property>
+    <layout class="QGridLayout" name="outer_layout">
+      <property name="leftMargin">
+        <number>6</number>
+      </property>
+      <property name="topMargin">
+        <number>6</number>
+      </property>
+      <property name="rightMargin">
+        <number>6</number>
+      </property>
+      <property name="bottomMargin">
+        <number>6</number>
+      </property>
+      <property name="spacing">
+        <number>6</number>
+      </property>
+      <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="IDC_GROUP_KEYCODE_SETTING">
+          <property name="title">
+            <string>KeyCode Setting</string>
+          </property>
+          <layout class="QGridLayout" name="layout_IDC_GROUP_KEYCODE_SETTING">
+            <item row="0" column="0" colspan="3">
+              <widget class="QCheckBox" name="IDC_CHECK_KEYCODE_UPDATE">
+                <property name="text">
+                  <string>Update KeyCode</string>
+                </property>
+              </widget>
+            </item>
+            <item row="1" column="1" colspan="2">
+              <widget class="QLabel" name="IDC_STATIC_KEY0">
+                <property name="text">
+                  <string>KeyCode0: 0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="2" column="1" colspan="2">
+              <widget class="QLabel" name="IDC_STATIC_KEY1">
+                <property name="text">
+                  <string>KeyCode1: 0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="3" column="1" colspan="2">
+              <widget class="QLabel" name="IDC_STATIC_KEY2">
+                <property name="text">
+                  <string>KeyCode2: 0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="4" column="1" colspan="2">
+              <widget class="QLabel" name="IDC_STATIC_KEY3">
+                <property name="text">
+                  <string>KeyCode3: 0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="1" column="2" rowspan="2" colspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_KEYCODE0"/>
+            </item>
+            <item row="2" column="2" rowspan="2" colspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_KEYCODE1"/>
+            </item>
+            <item row="3" column="2" rowspan="2" colspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_KEYCODE2"/>
+            </item>
+            <item row="4" column="2" rowspan="2" colspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_KEYCODE3"/>
+            </item>
+            <item row="5" column="1" colspan="3">
+              <widget class="QCheckBox" name="IDC_CHECK_SHOW_PASSWORD">
+                <property name="text">
+                  <string>Show characters</string>
+                </property>
+              </widget>
+            </item>
+            <item row="5" column="3">
+              <widget class="QCheckBox" name="IDC_CHECK_KEYCODE_RECORD">
+                <property name="text">
+                  <string>Record Settings</string>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <resources/>
+  <connections/>
+</ui>

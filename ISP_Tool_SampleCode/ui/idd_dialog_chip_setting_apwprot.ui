@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>678</width>
+    <height>450</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="outer_layout">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
+   <property name="spacing">
+    <number>6</number>
+   </property>
+   <item row="0" column="0" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_APROM_WPROT">
+     <property name="title">
+      <string>APROM Function Safety Protect</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_0">
+        <property name="text">
+         <string>Region 0: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_16">
+        <property name="text">
+         <string>Region 16: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_32">
+        <property name="text">
+         <string>Region 32: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_48">
+        <property name="text">
+         <string>Region 48: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_1">
+        <property name="text">
+         <string>Region 1: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_17">
+        <property name="text">
+         <string>Region 17: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_33">
+        <property name="text">
+         <string>Region 33: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_49">
+        <property name="text">
+         <string>Region 49: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_2">
+        <property name="text">
+         <string>Region 2: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_18">
+        <property name="text">
+         <string>Region 18: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_34">
+        <property name="text">
+         <string>Region 34: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_50">
+        <property name="text">
+         <string>Region 50: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_3">
+        <property name="text">
+         <string>Region 3: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_19">
+        <property name="text">
+         <string>Region 19: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_35">
+        <property name="text">
+         <string>Region 35: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_51">
+        <property name="text">
+         <string>Region 51: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_4">
+        <property name="text">
+         <string>Region 4: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_20">
+        <property name="text">
+         <string>Region 20: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_36">
+        <property name="text">
+         <string>Region 36: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_52">
+        <property name="text">
+         <string>Region 52: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_5">
+        <property name="text">
+         <string>Region 5: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_21">
+        <property name="text">
+         <string>Region 21: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_37">
+        <property name="text">
+         <string>Region 37: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_53">
+        <property name="text">
+         <string>Region 53: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_6">
+        <property name="text">
+         <string>Region 6: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_22">
+        <property name="text">
+         <string>Region 22: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_38">
+        <property name="text">
+         <string>Region 38: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_54">
+        <property name="text">
+         <string>Region 54: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_7">
+        <property name="text">
+         <string>Region 7: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_23">
+        <property name="text">
+         <string>Region 23: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_39">
+        <property name="text">
+         <string>Region 39: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_55">
+        <property name="text">
+         <string>Region 55: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_8">
+        <property name="text">
+         <string>Region 8: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_24">
+        <property name="text">
+         <string>Region 24: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_40">
+        <property name="text">
+         <string>Region 40: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_56">
+        <property name="text">
+         <string>Region 56: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_9">
+        <property name="text">
+         <string>Region 9: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_25">
+        <property name="text">
+         <string>Region 25: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_41">
+        <property name="text">
+         <string>Region 41: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_57">
+        <property name="text">
+         <string>Region 57: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_10">
+        <property name="text">
+         <string>Region 10: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_26">
+        <property name="text">
+         <string>Region 26: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_42">
+        <property name="text">
+         <string>Region 42: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_58">
+        <property name="text">
+         <string>Region 58: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_11">
+        <property name="text">
+         <string>Region 11: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_27">
+        <property name="text">
+         <string>Region 27: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_43">
+        <property name="text">
+         <string>Region 43: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_59">
+        <property name="text">
+         <string>Region 59: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_12">
+        <property name="text">
+         <string>Region 12: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_28">
+        <property name="text">
+         <string>Region 28: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_44">
+        <property name="text">
+         <string>Region 44: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_60">
+        <property name="text">
+         <string>Region 60: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_13">
+        <property name="text">
+         <string>Region 13: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_29">
+        <property name="text">
+         <string>Region 29: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_45">
+        <property name="text">
+         <string>Region 45: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="13" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_61">
+        <property name="text">
+         <string>Region 61: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_14">
+        <property name="text">
+         <string>Region 14: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_30">
+        <property name="text">
+         <string>Region 30: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_46">
+        <property name="text">
+         <string>Region 46: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="14" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_62">
+        <property name="text">
+         <string>Region 62: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="0" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_15">
+        <property name="text">
+         <string>Region 15: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_31">
+        <property name="text">
+         <string>Region 31: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="4" colspan="3">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_47">
+        <property name="text">
+         <string>Region 47: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="15" column="7">
+       <widget class="QCheckBox" name="IDC_CHECK_APROM_WPROT_63">
+        <property name="text">
+         <string>Region 63: 0x00000000 - 0xFFFFFFFF</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="0">
+       <widget class="QLabel" name="IDC_STATIC_APROM_WPROT0">
+        <property name="text">
+         <string>Region 0-31:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="1">
+       <widget class="QPushButton" name="IDC_BUTTON_APROM_WPROT0_SELECT_ALL">
+        <property name="text">
+         <string>Select All</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="2">
+       <widget class="QPushButton" name="IDC_BUTTON_APROM_WPROT0_CLEAR_ALL">
+        <property name="text">
+         <string>Clear All</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="4">
+       <widget class="QLabel" name="IDC_STATIC_APROM_WPROT1">
+        <property name="text">
+         <string>Region 32-63:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="5">
+       <widget class="QPushButton" name="IDC_BUTTON_APROM_WPROT1_SELECT_ALL">
+        <property name="text">
+         <string>Select All</string>
+        </property>
+       </widget>
+      </item>
+      <item row="16" column="6">
+       <widget class="QPushButton" name="IDC_BUTTON_APROM_WPROT1_CLEAR_ALL">
+        <property name="text">
+         <string>Clear All</string>
+        </property>
+       </widget>
+      </item>
+      <item row="17" column="0" colspan="4">
+       <widget class="QGroupBox" name="IDC_GROUP_APROM_WPROT_LEVEL">
+        <property name="title">
+         <string>APROM Write Protect One Time Lock Level Selection</string>
+        </property>
+        <layout class="QHBoxLayout" name="layout_IDC_GROUP_APROM_WPROT_LEVEL">
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_APROM_WPROT_LEVEL0">
+           <property name="text">
+            <string>Level 0</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_APROM_WPROT_LEVEL1">
+           <property name="text">
+            <string>Level 1</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_APROM_WPROT_LEVEL2">
+           <property name="text">
+            <string>Level 2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_APROM_WPROT_LEVEL3">
+           <property name="text">
+            <string>Level 3</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="17" column="4" colspan="4">
+       <widget class="QGroupBox" name="IDC_GROUP_APROM_WPROT_PIN">
+        <property name="title">
+         <string>Write Protect Lock Pin Selection</string>
+        </property>
+        <layout class="QHBoxLayout" name="layout_IDC_GROUP_APROM_WPROT_PIN">
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_APROM_WPROT_PIN_A">
+           <property name="text">
+            <string>GPx.y</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_APROM_WPROT_PIN_B">
+           <property name="text">
+            <string>GPx.y</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_APROM_WPROT_PIN_C">
+           <property name="text">
+            <string>GPx.y</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="IDC_RADIO_APROM_WPROT_PIN_D">
+           <property name="text">
+            <string>GPx.y</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QGroupBox" name="IDC_GROUP_CONFIG_VALUE">
+     <property name="title">
+      <string>Config Value</string>
+     </property>
+     <layout class="QHBoxLayout" name="layout_IDC_GROUP_CONFIG_VALUE">
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_8">
+        <property name="text">
+         <string>Config 8:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_8">
+        <property name="text">
+         <string>0x00000000</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_9">
+        <property name="text">
+         <string>Config 9:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_9">
+        <property name="text">
+         <string>0x00000000</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_10">
+        <property name="text">
+         <string>Config 10:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="IDC_STATIC_CONFIG_VALUE_10">
+        <property name="text">
+         <string>0x00000000</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

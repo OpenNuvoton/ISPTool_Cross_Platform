@@ -28,7 +28,7 @@ from configwindow import ConfigDialog
 from config_selection import config_setting_str
 from FlashInfo import GetStaticInfo
 from serial_port import serial_ports
-from PartNumID import PROJ_M460HD, PROJ_M460LD, PROJ_M2L31, PROJ_M55M1
+from PartNumID import *
 
 VOIDFUNCTYPE = CFUNCTYPE(c_void_p)
 UINTFUNCTYPE = CFUNCTYPE(c_uint)
@@ -282,10 +282,12 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
         elif os.name == 'posix':  # Linux/Unix/MacOS
             self.lib = ctypes.cdll.LoadLibrary('./ISPLib.so')
 
-        self.config = (c_uint * 14)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+        self.config = (c_uint * 19)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                    0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
                                     0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
                                     0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF)
-        self.wconfig = (c_uint * 14)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+        self.wconfig = (c_uint * 19)(0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
+                                     0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
                                      0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,
                                      0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF)
 
@@ -543,152 +545,11 @@ class Main_Ui(QtWidgets.QMainWindow, Ui_MainWindow):
             self.lineEdit_DataFlash.setText(filename)
 
     def configshow(self):
-        ctp = self.chip_type
-
-        if config_setting_str(ctp) == "":
-            import ui.config_type_0 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-        elif config_setting_str(ctp) == "M051D":
-            import ui.config_type_M051D as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M051D_setup()
-        elif config_setting_str(ctp) == "M058":
-            import ui.config_type_M051D as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M058_setup()
-        elif config_setting_str(ctp) == "M051A":
-            import ui.config_type_M051 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M051A_setup()
-        elif config_setting_str(ctp) == "M051B":
-            import ui.config_type_M051 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M051B_setup()
-        elif config_setting_str(ctp) == "M251":
-            import ui.config_type_M251 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M251_setup()
-        elif config_setting_str(ctp) == "M258":
-            import ui.config_type_M251 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M258_setup()
-        elif config_setting_str(ctp) == "NUC100":
-            import ui.config_type_NUC100 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NUC100_setup()
-        elif config_setting_str(ctp) == "NUC122":
-            import ui.config_type_NUC100 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NUC122_setup()
-        elif config_setting_str(ctp) == "NUC123AN":
-            import ui.config_type_NUC200 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NUC123AN_setup()
-        elif config_setting_str(ctp) == "NUC123AE":
-            import ui.config_type_NUC200 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NUC123AE_setup()
-        elif config_setting_str(ctp) == "NUC200":
-            import ui.config_type_NUC200 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NUC200_setup()
-        elif config_setting_str(ctp) == "M0564":
-            import ui.config_type_NUC200 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M0564_setup()
-        elif config_setting_str(ctp) == "NUC1262":
-            import ui.config_type_NUC200 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NUC1262_setup()
-        elif config_setting_str(ctp) == "MINI51":
-            import ui.config_type_MINI51 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_MINI51_setup()
-        elif config_setting_str(ctp) == "MINI51CN":
-            import ui.config_type_MINI51CN as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_MINI51CN_setup()
-        elif config_setting_str(ctp) == "NANO100":
-            import ui.config_type_NANO100 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NANO100_setup()
-        elif config_setting_str(ctp) == "NANO112":
-            import ui.config_type_NANO100 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NANO112_setup()
-        elif config_setting_str(ctp) == "NANO103":
-            import ui.config_type_NANO103 as UI
-            self.configwindow.config_type_NANO103_setup()
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-        elif config_setting_str(ctp) == "MINI55":
-            import ui.config_type_MINI55 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_MINI55_setup()
-        elif config_setting_str(ctp) == "NM1120":
-            import ui.config_type_NM1120 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NM1120_setup()
-        elif config_setting_str(ctp) == "NM1500":
-            import ui.config_type_NM1500 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NM1500_setup()
-        elif config_setting_str(ctp) == "NUC400":
-            import ui.config_type_NUC400 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_NUC400_setup()
-        elif config_setting_str(ctp) == "M451":
-            import ui.config_type_M451 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M451_setup()
-        elif config_setting_str(ctp) == "M031":
-            import ui.config_type_M031 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M031_setup()
-        elif config_setting_str(ctp) == "M030G":
-            import ui.config_type_M031 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M030G_setup()
-        elif config_setting_str(ctp) == "M0A21":
-            import ui.config_type_M0A21 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M0A21_setup()
-        elif config_setting_str(ctp) == "M480":
-            import ui.config_type_M480 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M480_setup()
-        elif config_setting_str(ctp) == "M480LD":
-            import ui.config_type_M480LD as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M480LD_setup()
-        elif config_setting_str(ctp) == "M460":
-            import ui.config_type_M460 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M460_setup()
-        elif config_setting_str(ctp) == "M2351":
-            import ui.config_type_M2351 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M2351_setup()
-        elif config_setting_str(ctp) == "M2354":
-            import ui.config_type_M2351 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M2354_setup()
-        elif config_setting_str(ctp) == "M471":
-            import ui.config_type_M471 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M471_setup()
-        elif config_setting_str(ctp) == "M2L31":
-            import ui.config_type_M2L31 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M2L31_setup()
-        elif config_setting_str(ctp) == "M2003":
-            import ui.config_type_M2003 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M2003_setup()
-        elif config_setting_str(ctp) == "M55M1":
-            import ui.config_type_M55M1 as UI
-            self.configwindow = ConfigDialog(parent = self, ui = UI.Ui_Dialog())
-            self.configwindow.config_type_M55M1_setup()
-
+        chip_type = self.chip_type
+        
+        #debug
+        #chip_type = PROJ_M3331IG
+        self.configwindow = ConfigDialog(parent = self, ctp = chip_type)
         self.configwindow.show()
 
     def read_APROM(self):

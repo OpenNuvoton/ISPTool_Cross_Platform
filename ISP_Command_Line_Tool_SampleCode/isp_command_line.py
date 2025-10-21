@@ -5,6 +5,7 @@ import serial
 import struct
 import hid
 import ctypes
+import time
 
 from ctypes import *
 from FlashInfo import *
@@ -26,7 +27,7 @@ class io_handle_t(Structure):
     _fields_ = [
         ("dev_open", c_uint),
         ("bResendFlag", c_uint),
-        ("m_usCheckSum",c_ubyte),
+        ("m_usCheckSum",c_ushort),
         ("m_uCmdIndex",c_uint),
         ("m_intf",c_uint),
         ("ac_buffer",c_ubyte * 65),
@@ -262,6 +263,8 @@ def main():
     
     isUART = False
     
+    isCustom = False
+    
     #USB Version
     m_USB_dev_io = USB_dev_io()
     m_UART_dev_io = UART_dev_io()
@@ -275,7 +278,8 @@ def main():
     group.add_argument("-d", "--dataflash", nargs='+', help="Update Data Flash")
     group.add_argument("-c", "--config", nargs='+', help="Update Config Value")
     group.add_argument("-e", "--erase", action='store_true', help="Erase All")
-    
+    if isCustom:
+        group.add_argument("-l", "--ldrom", action='store_true', help="Jump to LDROM")
     parser.add_argument("-j", "--jump", action='store_true', help="Jump to APROM")
     
     if len(sys.argv) == 1:
@@ -319,6 +323,7 @@ def main():
     m_lib.ISP_Close.restype = None
 
     ct = m_lib.ISP_Open(byref(m_io_handle_t))
+
     if (ct != 0):
         t = 0
         r = 0
@@ -335,6 +340,11 @@ def main():
             print("ISP Connect Retry!")
          
         if (r):
+            if isCustom and args.ldrom:
+                #send jump to ldrom
+                print("ISP Connect Success! Send jump to LDROM and quit.")
+                m_lib.ISP_SendSingleCommand(pointer(m_io_handle_t), 0xD0)
+                return
             m_lib.ISP_SyncPackNo(byref(m_io_handle_t))
             print("ISP Connect Success!")
         else:
@@ -359,11 +369,7 @@ def main():
     print("Target Device: " + chip_name + "\n")
     print("Target APROM size: " + str(int(aprom_size/1024)) + "KB\n")
     print("Target Data Flash Size: " + str(int(nvm_size/1024)) + "KB\n")
-    print("Target Config[0]: " + hex(m_config[0]) + "\n")
-    print("Target Config[1]: " + hex(m_config[1]) + "\n")
-    print("Target Config[2]: " + hex(m_config[2]) + "\n")
-    print("Target Config[3]: " + hex(m_config[3]) + "\n")
-    
+
     if args.aprom:
         arg_count = len(args.aprom)
         if arg_count != 1:

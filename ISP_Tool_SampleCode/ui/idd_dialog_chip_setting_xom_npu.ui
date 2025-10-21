@@ -1,0 +1,230 @@
+<?xml version="1.0" ?>
+<ui version="4.0">
+  <class>Dialog</class>
+  <widget class="QDialog" name="Dialog">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>640</width>
+        <height>360</height>
+      </rect>
+    </property>
+    <layout class="QGridLayout" name="outer_layout">
+      <property name="leftMargin">
+        <number>6</number>
+      </property>
+      <property name="topMargin">
+        <number>6</number>
+      </property>
+      <property name="rightMargin">
+        <number>6</number>
+      </property>
+      <property name="bottomMargin">
+        <number>6</number>
+      </property>
+      <property name="spacing">
+        <number>6</number>
+      </property>
+      <item row="0" column="0" colspan="2">
+        <widget class="QGroupBox" name="IDC_GROUP_XOM">
+          <property name="title">
+            <string>Execution-Only Memory Range Setting</string>
+          </property>
+          <layout class="QGridLayout" name="layout_IDC_GROUP_XOM">
+            <item row="0" column="0">
+              <widget class="QLabel" name="IDC_STATIC_XOM_REGION">
+                <property name="text">
+                  <string>Regions</string>
+                </property>
+              </widget>
+            </item>
+            <item row="0" column="1" colspan="2">
+              <widget class="QLabel" name="IDC_STATIC_XOM_START_ADDRESS">
+                <property name="text">
+                  <string>Start Address</string>
+                </property>
+              </widget>
+            </item>
+            <item row="0" column="2" colspan="3">
+              <widget class="QLabel" name="IDC_STATIC_XOM_PAGE_COUNT">
+                <property name="text">
+                  <string>Page Count(s)</string>
+                </property>
+              </widget>
+            </item>
+            <item row="0" column="4">
+              <widget class="QLabel" name="IDC_STATIC_XOM_MODE">
+                <property name="text">
+                  <string>Mode</string>
+                </property>
+              </widget>
+            </item>
+            <item row="0" column="7">
+              <widget class="QLabel" name="IDC_STATIC_XOM_DR_BOUNDARY">
+                <property name="text">
+                  <string>NPU Boundary</string>
+                </property>
+              </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+              <widget class="QCheckBox" name="IDC_CHECK_XOM0">
+                <property name="text">
+                  <string>XOM0:    0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="3" column="0" colspan="2">
+              <widget class="QCheckBox" name="IDC_CHECK_XOM1">
+                <property name="text">
+                  <string>XOM1:    0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="5" column="0" colspan="2">
+              <widget class="QCheckBox" name="IDC_CHECK_XOM2">
+                <property name="text">
+                  <string>XOM2:    0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="7" column="0" colspan="2">
+              <widget class="QCheckBox" name="IDC_CHECK_XOM3">
+                <property name="text">
+                  <string>XOM3:    0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="1" column="1" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM0_START_ADDRESS"/>
+            </item>
+            <item row="3" column="1" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM1_START_ADDRESS"/>
+            </item>
+            <item row="5" column="1" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM2_START_ADDRESS"/>
+            </item>
+            <item row="7" column="1" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM3_START_ADDRESS"/>
+            </item>
+            <item row="1" column="2" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM0_PAGE_COUNT"/>
+            </item>
+            <item row="3" column="2" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM1_PAGE_COUNT"/>
+            </item>
+            <item row="5" column="2" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM2_PAGE_COUNT"/>
+            </item>
+            <item row="7" column="2" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM3_PAGE_COUNT"/>
+            </item>
+            <item row="1" column="3">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM0_ACTIVE">
+                <property name="text">
+                  <string>Active</string>
+                </property>
+              </widget>
+            </item>
+            <item row="1" column="4">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM0_DEBUG">
+                <property name="text">
+                  <string>Debug</string>
+                </property>
+              </widget>
+            </item>
+            <item row="3" column="3">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM1_ACTIVE">
+                <property name="text">
+                  <string>Active</string>
+                </property>
+              </widget>
+            </item>
+            <item row="3" column="4">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM1_DEBUG">
+                <property name="text">
+                  <string>Debug</string>
+                </property>
+              </widget>
+            </item>
+            <item row="5" column="3">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM2_ACTIVE">
+                <property name="text">
+                  <string>Active</string>
+                </property>
+              </widget>
+            </item>
+            <item row="5" column="4">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM2_DEBUG">
+                <property name="text">
+                  <string>Debug</string>
+                </property>
+              </widget>
+            </item>
+            <item row="7" column="3">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM3_ACTIVE">
+                <property name="text">
+                  <string>Active</string>
+                </property>
+              </widget>
+            </item>
+            <item row="7" column="4">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM3_DEBUG">
+                <property name="text">
+                  <string>Debug</string>
+                </property>
+              </widget>
+            </item>
+            <item row="7" column="5">
+              <widget class="QRadioButton" name="IDC_RADIO_XOM3_NPU">
+                <property name="text">
+                  <string>NPU</string>
+                </property>
+              </widget>
+            </item>
+            <item row="7" column="6">
+              <widget class="QLabel" name="IDC_STATIC">
+                <property name="text">
+                  <string>0x</string>
+                </property>
+              </widget>
+            </item>
+            <item row="7" column="7" rowspan="2">
+              <widget class="QLineEdit" name="IDC_EDIT_XOM3_DR_BOUNDARY"/>
+            </item>
+            <item row="2" column="1" colspan="5">
+              <widget class="QLabel" name="IDC_STATIC_XOM0_RANGE">
+                <property name="text">
+                  <string>Range: 0x00000000 - 0xFFFFFFFF</string>
+                </property>
+              </widget>
+            </item>
+            <item row="4" column="1" colspan="5">
+              <widget class="QLabel" name="IDC_STATIC_XOM1_RANGE">
+                <property name="text">
+                  <string>Range: 0x00000000 - 0xFFFFFFFF</string>
+                </property>
+              </widget>
+            </item>
+            <item row="6" column="1" colspan="5">
+              <widget class="QLabel" name="IDC_STATIC_XOM2_RANGE">
+                <property name="text">
+                  <string>Range: 0x00000000 - 0xFFFFFFFF</string>
+                </property>
+              </widget>
+            </item>
+            <item row="8" column="1" colspan="5">
+              <widget class="QLabel" name="IDC_STATIC_XOM3_RANGE">
+                <property name="text">
+                  <string>Range: 0x00000000 - 0xFFFFFFFF</string>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </widget>
+      </item>
+    </layout>
+  </widget>
+  <resources/>
+  <connections/>
+</ui>
